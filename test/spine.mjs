@@ -32,8 +32,8 @@ for (const c of cases) {
 await p.fill("#pages", "60");
 await p.waitForTimeout(200);
 console.log("spine text at 60p:", (await p.textContent("#spineText")).slice(0, 60));
-if (!(await p.textContent("#spineText")).includes("Not allowed")) throw new Error("should forbid spine text under 79 pages");
-// Allowed from 79 pages, but KDP's spine safe area (spine less 0.0625" at each
+if (!(await p.textContent("#spineText")).includes("Not allowed")) throw new Error("should forbid spine text under 80 pages");
+// Allowed from 80 pages, but KDP's spine safe area (spine less 0.0625" at each
 // fold) has no room for readable type until about 88 pages of cream, and
 // Puzzle Press keeps its own spine text a further 1/64" in: 100 pages.
 await p.selectOption("#paper", "cream");
@@ -52,6 +52,17 @@ await p.waitForTimeout(200);
 const at100 = await p.textContent("#spineText");
 console.log("spine text at 100p cream:", at100);
 if (!at100.includes("fits type up to about")) throw new Error("100 pages of cream: Puzzle Press prints spine text");
+
+// The cover template is a PNG of exactly the canvas size printed above it.
+await p.selectOption("#trim", "6x9");
+await p.selectOption("#paper", "cream");
+await p.fill("#pages", "120");
+await p.waitForTimeout(200);
+const [dl] = await Promise.all([p.waitForEvent("download"), p.click("#tplBtn")]);
+const png = (await import("node:fs")).readFileSync(await dl.path());
+const [tw, th] = [png.readUInt32BE(16), png.readUInt32BE(20)];
+console.log("template:", dl.suggestedFilename(), tw, th, "page says", await p.textContent("#coverPx"));
+if (`${tw} × ${th} px` !== (await p.textContent("#coverPx")) || tw !== 3765 || th !== 2775) throw new Error("cover template is not the 300 DPI canvas size");
 
 await p.setViewportSize({ width: 400, height: 900 });
 await p.waitForTimeout(300);

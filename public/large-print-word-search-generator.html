@@ -14,7 +14,8 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231d3557'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-weight='700' font-size='18' fill='white' text-anchor='middle'%3EP%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <style>
   :root { --ink:#1a1a1a; --muted:#5c6470; --line:#d9dde3; --bg:#f6f7f9; --card:#fff; --accent:#1d3557; }
   * { box-sizing: border-box; }
@@ -70,6 +71,8 @@
 }
 </script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b7be686eebf64639b0e60d43860bbd54"}'></script>
+<script type="module" src="/js/first-touch.js"></script>
+<script src="https://pulse.bananafest-destiny.com/p.js" data-site="puzzlepress.bananafest-destiny.com" defer></script>
 </head>
 <body>
 <header>
@@ -84,7 +87,7 @@
   <div class="top">
     <div>
       <h1>Large print word search generator for seniors</h1>
-      <p class="lede">For a reader whose eyes have changed, and for whoever is choosing the book for them. One checkbox switches the whole book to 8.5 × 11 pages with a grid sized for big letters — no separate settings to hunt for. Free to use; free books carry one small line in the page footer and a cover marked PREVIEW.</p>
+      <p class="lede">For a reader whose eyes have changed, and for whoever is choosing the book for them. One checkbox switches the whole book to 8.5 × 11 pages with a grid sized for big letters — no separate settings to hunt for. Free to use; free books have unmarked pages and a cover marked PREVIEW.</p>
       <div class="actions">
         <a class="btn" href="/?kind=wordsearch&largePrint=1#tool">Make a book free</a>
         <a href="/samples/sample-large-print-8.5x11.pdf" target="_blank" rel="noopener">See a finished large print book (PDF)</a>
@@ -103,12 +106,18 @@
 
   <section class="prose">
     <h2>Who this actually sells to</h2>
-    <p>Every source on KDP puzzle-book niches ranks this category above every other one, for the same reason: the buyer is rarely the solver. It's an adult child, a caregiver, or a grandchild choosing a gift for someone whose reading is harder than it used to be — which means the cover has to say "large print" as plainly as the inside does. The cover this tool builds for a large-print book carries its own corner badge for exactly that reason: a shopper scanning a page of thumbnails needs to see it before they click.</p>
+    <p>The person who buys a large-print puzzle book may not be the one who solves it: an adult child, a caregiver, or a grandchild choosing a gift for someone whose reading is harder than it used to be. So the cover has to say "large print" as plainly as the inside does. The cover this tool builds for a large-print book carries its own corner badge for exactly that reason: a shopper scanning a page of thumbnails needs to see it before they click.</p>
+  </section>
+
+  <section class="prose">
+    <h2>Printing one at home, for someone you know</h2>
+    <p>You don't have to sell the book. The same generator makes a free large-print word search book to print at home for a parent or a grandparent: pick a theme they like, or type in your own words (family names, places, a hobby), and download the PDF. There's no sign-up. The pages are US letter, 8.5 × 11, so they go through a home printer as they are, and the answers come one grid to a page, so they are large print too. The free book's pages carry no mark from Puzzle Press; only the cover, if you make one, says PREVIEW. To see the size first, open the <a href="/samples/sample-large-print-8.5x11.pdf">49-page large-print sample</a>.</p>
   </section>
 
   <section class="prose">
     <h2>Grades and themes still apply</h2>
-    <p>Large print is a size preset, not a separate mode — every theme, custom word list, and difficulty grade in the regular <a href="/word-search-book-generator">word search generator</a> works the same way underneath it. Garden, birdwatching, and faith-based lists are common pairings for this audience specifically; the full list is at <a href="/word-lists/">/word-lists</a>.</p>
+    <p>Large print is a size preset, not a separate mode — every theme, custom word list, and difficulty grade in the regular <a href="/word-search-book-generator">word search generator</a> works the same way underneath it. The full list of themes is at <a href="/word-lists/">/word-lists</a>.</p>
+    <p>For Christmas, <a href="/?kind=wordsearch&amp;largePrint=1&amp;theme=christmas#tool">open the generator with the large-print preset and the Christmas list</a>: 50 puzzles from the <a href="/word-lists/christmas">Christmas word list</a>, 108 pages at 8.5" × 11" with solutions, plus the full-wrap cover. If you tick KDP's low-content box, its <a href="https://kdp.amazon.com/en_US/help/topic/G202173620" rel="noopener">Timelines help page</a> says that review is taking three to four weeks. Four weeks back from 25 December is <strong>Friday 27 November</strong>: submit by then to be on sale by Christmas, and earlier for any margin. Without the box, KDP says a book takes 3 business days to go live, so for 25 December submit by about <strong>Friday 18 December</strong>.</p>
   </section>
 
   <section class="prose">
@@ -131,15 +140,16 @@
 
   <div class="cta">
     <h2>Make one now</h2>
-    <p>Choose the settings, watch the preview, download the interior and then the cover — the spine already sized from the page count of the book you just made. Free to use; $19 once removes the footer line and the PREVIEW cover mark, and the price is on the page before you click anything.</p>
+    <p>Choose the settings, watch the preview, download the interior and then the cover — the spine already sized from the page count of the book you just made. Free to use; $19 once removes the PREVIEW cover mark, and the price is on the page before you click anything.</p>
     <a class="btn" href="/?kind=wordsearch&largePrint=1#tool">Make a word search book free</a>
   </div>
 </main>
 
 <footer>
-  <p><strong>Puzzle Press</strong> — a <a href="https://bananafest-destiny.com">Bananafest Destiny</a> app. <a href="/#terms">Terms</a> · <a href="/word-search-book-generator">Word search</a> · <a href="/large-print-word-search-generator">Large print</a> · <a href="/sudoku-book-generator">Sudoku</a> · <a href="/maze-book-generator">Mazes</a> · <a href="/criss-cross-book-generator">Criss-cross</a> · <a href="/crossword-book-generator">Crosswords</a> · <a href="/word-lists/">Word lists</a> · <a href="mailto:support@bananafest-destiny.com">support@bananafest-destiny.com</a></p>
+  <p><strong>Puzzle Press</strong> — a <a href="https://bananafest-destiny.com">Bananafest Destiny</a> app. <a href="/#terms">Terms</a> · <a href="/privacy">Privacy</a> · <a href="/word-search-book-generator">Word search</a> · <a href="/large-print-word-search-generator">Large print</a> · <a href="/sudoku-book-generator">Sudoku</a> · <a href="/maze-book-generator">Mazes</a> · <a href="/criss-cross-book-generator">Criss-cross</a> · <a href="/crossword-book-generator">Crosswords</a> · <a href="/word-lists/">Word lists</a> · <a href="mailto:support@bananafest-destiny.com">support@bananafest-destiny.com</a></p>
   <p>Not affiliated with Amazon. KDP is a trademark of Amazon.com, Inc. Figures are from Amazon's published specifications; check your proof.</p>
   <p>Built in public by an autonomous agent — the full log is at <a href="https://bananafest-destiny.com/zoo/vibe-cider">bananafest-destiny.com/zoo/vibe-cider</a></p>
+  <p>Built by an AI bot. Want one for your own idea? <a href="https://vibecider.bananafest-destiny.com/?from=puzzlepress">$50 →</a></p>
 </footer>
 </body>
 </html>

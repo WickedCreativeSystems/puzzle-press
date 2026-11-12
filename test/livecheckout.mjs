@@ -17,10 +17,11 @@ const ctx = await b.newContext({ viewport: { width: 1280, height: 1000 } });
 const p = await ctx.newPage();
 await p.route("https://static.cloudflareinsights.com/**", (route) => route.abort());
 await p.goto(base, { waitUntil: "networkidle" });
-await p.waitForSelector(".grid div");
+// Puzzle Press is ready when its grid draws, Trace Press when its preview does.
+await p.waitForSelector(".grid div, #preview svg");
 
 // 1. From the pricing block, the way a visitor who scrolled would.
-await p.click("#buyNow");
+await p.locator("#buyNow, [data-unlock]").first().click();
 await p.waitForSelector("#unlockDialog[open]");
 const href = await p.getAttribute("#buyLine a", "href");
 console.log("Buy link:", href);
@@ -38,7 +39,12 @@ if (!rel.includes("noopener")) throw new Error(`Buy link needs rel=noopener, got
 if (!(await p.isVisible("#buyLine a"))) throw new Error("Buy link is not visible in the dialog");
 
 const tag = `${SELFTEST_PREFIX}${new Date().toISOString().replace(/[^\dT]/g, "").slice(0, 15)}`;
-const tagged = `${href}${href.includes("?") ? "&" : "?"}client_reference_id=${tag}`;
+// The real link already carries client_reference_id=src-<where> (src/ui/source.js);
+// ours replaces it, so Stripe gets one id and it is the self-test one.
+if (!/[?&]client_reference_id=src-[a-z0-9_-]+/.test(href)) throw new Error(`Buy link carries no src- tag: ${href}`);
+const own = new URL(href);
+own.searchParams.set("client_reference_id", tag);
+const tagged = own.href;
 console.log("following (tagged as a self-test):", tag);
 const checkout = await ctx.newPage();
 await checkout.route("https://static.cloudflareinsights.com/**", (route) => route.abort());
@@ -47,7 +53,7 @@ await checkout.waitForSelector("#email", { timeout: 60000 });
 await checkout.waitForTimeout(1500);
 const body = (await checkout.textContent("body")).replace(/\s+/g, " ");
 const price = body.match(/\$\d+\.\d\d/)?.[0];
-const product = body.match(/Puzzle Press[^$]{0,40}/)?.[0]?.trim();
+const product = body.match(/(Puzzle|Trace) Press[^$]{0,40}/)?.[0]?.trim();
 console.log("checkout shows:", product, "|", price);
 console.log("sandbox badge present:", /Sandbox|TEST MODE/i.test(body));
 console.log("'per unlimited' still present:", /per unlimited/i.test(body));
@@ -56,8 +62,12 @@ if (/Sandbox|TEST MODE/i.test(body)) throw new Error("live link is showing a san
 if (/per unlimited/i.test(body)) throw new Error("unit label still reads 'per unlimited'");
 
 // 3. The card form actually mounts (so a buyer can pay), then we stop.
+// Stripe has shipped two markups for the method list: accordion radios, and
+// (seen 2026-10-16) a "Card" row whose click target is a "Pay with card"
+// button that Playwright reads as outside the viewport. Fire its click.
 const methods = await checkout.$$("input[name='payment-method-accordion-item-title']");
 if (methods.length) await methods[0].click({ force: true });
+else await checkout.locator("[data-testid='card-accordion-item-button']").first().dispatchEvent("click");
 await checkout.waitForSelector("#cardNumber", { timeout: 60000 });
 console.log("card form mounted: yes — stopping here, nothing charged");
 await checkout.screenshot({ path: new URL("../samples/browser/live-checkout-form.png", import.meta.url).pathname, fullPage: true });

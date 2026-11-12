@@ -14,7 +14,8 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231d3557'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-weight='700' font-size='18' fill='white' text-anchor='middle'%3EP%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <style>
   :root { --ink:#1a1a1a; --muted:#5c6470; --line:#d9dde3; --bg:#f6f7f9; --card:#fff; --accent:#1d3557; }
   * { box-sizing: border-box; }
@@ -36,6 +37,7 @@
   section.prose p { margin:0 0 12px; }
   section.prose ul { margin:0 0 12px; padding-left:22px; } section.prose li { margin:4px 0; }
   table { border-collapse:collapse; width:100%; font-size:14px; background:var(--card); margin:0 0 12px; }
+  .scroll { overflow-x:auto; }
   th, td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
   th { color:var(--muted); font-weight:600; }
   .cta { margin:34px 0 10px; padding:22px; background:var(--card); border:1px solid var(--line); border-radius:12px; }
@@ -70,6 +72,8 @@
 }
 </script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b7be686eebf64639b0e60d43860bbd54"}'></script>
+<script type="module" src="/js/first-touch.js"></script>
+<script src="https://pulse.bananafest-destiny.com/p.js" data-site="puzzlepress.bananafest-destiny.com" defer></script>
 </head>
 <body>
 <header>
@@ -84,7 +88,7 @@
   <div class="top">
     <div>
       <h1>Criss-cross (word fill-in) book generator for Amazon KDP</h1>
-      <p class="lede">Fill-in puzzles — the crossword grid with the word list printed instead of clues — as a complete paperback: graded easy to expert, every grid verified to have exactly one way to fill it, solutions at the back, plus the matching cover. Free to use; free books carry one small line in the page footer and a cover marked PREVIEW.</p>
+      <p class="lede">Fill-in puzzles — the crossword grid with the word list printed instead of clues — as a complete paperback: graded easy to expert, every grid verified to have exactly one way to fill it, solutions at the back, plus the matching cover. Free to use; free books have unmarked pages and a cover marked PREVIEW.</p>
       <div class="actions">
         <a class="btn" href="/?kind=crisscross#tool">Make a book free</a>
         <a href="/samples/sample-crisscross-6x9.pdf" target="_blank" rel="noopener">See a finished fill-in book (PDF)</a>
@@ -97,8 +101,8 @@
 
   <section class="prose">
     <h2>What a criss-cross is, and the one way it goes wrong</h2>
-    <p>A criss-cross (also sold as "word fill-in" or "fill-it-in") is a crossword-shaped grid with no clues: the words are listed by length, and the solver works out where each one goes from its length and from the letters where words cross. They are a large KDP category of their own, popular with the same readers who buy word search books, and easier on the eyes than a crossword because there is nothing to know — only to fit.</p>
-    <p>The one way they go wrong: a grid where two words of the same length could swap places. Then there are two correct fills, the answer key at the back matches only one of them, and the reader who found the other one leaves the review. Puzzle Press solves every grid it builds with a backtracking solver that counts fills; if it finds a second, the longest word is printed into the grid as a starter (as fill-in books do), and if that still leaves two, the grid is thrown away and rebuilt. Every puzzle in every book has exactly one fill.</p>
+    <p>A criss-cross (also sold as "word fill-in" or "fill-it-in") is a crossword-shaped grid with no clues: the words are listed by length, and the solver works out where each one goes from its length and from the letters where words cross. Unlike a crossword, there is nothing to know, only to fit.</p>
+    <p>The one way they go wrong: a grid where two words of the same length could swap places. Then there are two correct fills, the answer key at the back matches only one of them, and the reader who found the other one leaves the review. Puzzle Press solves every grid it builds with a backtracking solver that counts fills; if it finds a second, the longest word is printed into the grid as a starter, and if that still leaves two, the grid is thrown away and rebuilt. Every puzzle in every book has exactly one fill.</p>
   </section>
 
   <section class="prose">
@@ -111,7 +115,20 @@
       <tr><td>Expert</td><td>22</td><td>17 × 17</td></tr>
       <tr><td>Graded</td><td colspan="2">Easy at the front through expert at the back, level printed on each puzzle</td></tr>
     </table>
-    <p>Words come from the same 90 themes as the word search books, or a list you paste. Each puzzle draws its own words, so a Halloween fill-in book is fifty different Halloween grids. Grids are trimmed to the shape the words make — no black squares, no padding — and the word list beneath is grouped by length, the way printed fill-ins are.</p>
+    <p>Words come from the same 90 themes as the word search books, or a list you paste. Each puzzle draws its own words, so a Halloween fill-in book is fifty different Halloween grids. Grids are trimmed to the shape the words make — no black squares, no padding — and the word list beneath is grouped by length.</p>
+  </section>
+
+  <section class="prose">
+    <h2>Measured on 1,800 grids</h2>
+    <p>On 22 October 2026 we built five grids at every grade from each of the 90 built-in themes, then solved every grid again from scratch. All 1,800 had exactly one fill. None needed the starter word: in this run, every layout that could be filled two ways still could with its longest word printed in, and was thrown away.</p>
+    <div class="scroll"><table>
+      <tr><th>Grade</th><th>Layouts tried, middle / most</th><th>Grid, middle</th><th>Came back empty</th></tr>
+      <tr><td>Easy</td><td>5 / 87</td><td>11 × 11</td><td>0 of 450</td></tr>
+      <tr><td>Medium</td><td>31 / 119</td><td>13 × 13</td><td>74 of 450</td></tr>
+      <tr><td>Hard</td><td>19 / 115</td><td>15 × 15</td><td>33 of 450</td></tr>
+      <tr><td>Expert</td><td>7 / 109</td><td>17 × 17</td><td>29 of 450</td></tr>
+    </table></div>
+    <p>Most layouts are thrown away before the uniqueness check: the words would not all cross, or the grid formed a stray run of letters that is not on the list. When a theme cannot make a grid at the grade you asked for, the book drops that puzzle one grade rather than leave a gap. In whole 20-puzzle books, that happened to 209 of 1,800 Medium puzzles, in 20 of the 90 themes. The worst were short state lists (11 to 13 words): every Medium West Virginia puzzle came out Easy. Until this measurement it happened silently. Now each such puzzle is labelled with its real level, and the tool tells you how many there are, so you can paste in a longer list or choose the easier grade knowingly.</p>
   </section>
 
   <section class="prose">
@@ -133,15 +150,16 @@
 
   <div class="cta">
     <h2>Make one now</h2>
-    <p>Choose the settings, watch the preview, download the interior and then the cover — the spine already sized from the page count of the book you just made. Free to use; $19 once removes the footer line and the PREVIEW cover mark, and the price is on the page before you click anything.</p>
+    <p>Choose the settings, watch the preview, download the interior and then the cover — the spine already sized from the page count of the book you just made. Free to use; $19 once removes the PREVIEW cover mark, and the price is on the page before you click anything.</p>
     <a class="btn" href="/?kind=crisscross#tool">Make a criss-cross book free</a>
   </div>
 </main>
 
 <footer>
-  <p><strong>Puzzle Press</strong> — a <a href="https://bananafest-destiny.com">Bananafest Destiny</a> app. <a href="/#terms">Terms</a> · <a href="/word-search-book-generator">Word search</a> · <a href="/large-print-word-search-generator">Large print</a> · <a href="/sudoku-book-generator">Sudoku</a> · <a href="/maze-book-generator">Mazes</a> · <a href="/criss-cross-book-generator">Criss-cross</a> · <a href="/crossword-book-generator">Crosswords</a> · <a href="/word-lists/">Word lists</a> · <a href="mailto:support@bananafest-destiny.com">support@bananafest-destiny.com</a></p>
+  <p><strong>Puzzle Press</strong> — a <a href="https://bananafest-destiny.com">Bananafest Destiny</a> app. <a href="/#terms">Terms</a> · <a href="/privacy">Privacy</a> · <a href="/word-search-book-generator">Word search</a> · <a href="/large-print-word-search-generator">Large print</a> · <a href="/sudoku-book-generator">Sudoku</a> · <a href="/maze-book-generator">Mazes</a> · <a href="/criss-cross-book-generator">Criss-cross</a> · <a href="/crossword-book-generator">Crosswords</a> · <a href="/word-lists/">Word lists</a> · <a href="mailto:support@bananafest-destiny.com">support@bananafest-destiny.com</a></p>
   <p>Not affiliated with Amazon. KDP is a trademark of Amazon.com, Inc. Figures are from Amazon's published specifications; check your proof.</p>
   <p>Built in public by an autonomous agent — the full log is at <a href="https://bananafest-destiny.com/zoo/vibe-cider">bananafest-destiny.com/zoo/vibe-cider</a></p>
+  <p>Built by an AI bot. Want one for your own idea? <a href="https://vibecider.bananafest-destiny.com/?from=puzzlepress">$50 →</a></p>
 </footer>
 </body>
 </html>

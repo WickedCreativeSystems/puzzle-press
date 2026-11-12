@@ -44,7 +44,9 @@ await page.route("https://static.cloudflareinsights.com/**", (route) => route.ab
 const errors = [];
 page.on("pageerror", (e) => errors.push(String(e)));
 // Expected: /api/verify answers 4xx/5xx for unknown emails; that is not a page error.
-page.on("console", (m) => { if (m.type() === "error" && !/Failed to load resource/.test(m.text())) errors.push(m.text()); });
+// Cloudflare's own analytics script (static.cloudflareinsights.com) is blocked
+// as a tracker by Playwright's Firefox; that is Cloudflare's, not the page's.
+page.on("console", (m) => { if (m.type() === "error" && !/Failed to load resource|cloudflareinsights/.test(m.text())) errors.push(m.text()); });
 
 await page.goto(base, { waitUntil: "networkidle" });
 await page.waitForSelector(".grid div");
@@ -187,6 +189,17 @@ await page.waitForTimeout(800);
 const emptyMeta = await page.textContent("#meta");
 const emptyCover = await page.textContent("#coverNote");
 if (!emptyMeta.startsWith("No book yet") || emptyCover) throw new Error(`no puzzles, but meta says "${emptyMeta}" and cover "${emptyCover}"`);
+if (await page.isVisible("#keywordsBox")) throw new Error("no puzzles, but KDP keywords are shown");
+
+// Seven KDP keyword phrases for the book on screen, none already in its title.
+await page.goto(`${base}/#tool`, { waitUntil: "networkidle" });
+await page.fill("#title", "Word Search Puzzle Book");
+const kws = await page.$$eval("#keywords li", (l) => l.map((x) => x.firstChild.textContent));
+if (kws.length !== 7 || kws.some((k) => "word search puzzle book".includes(k))) throw new Error(`KDP keywords: ${JSON.stringify(kws)}`);
+console.log(`seven KDP keywords: ${kws.join(" / ")}`);
+const desc = await page.inputValue("#listing");
+if (!/^Word Search Puzzle Book(: [^\n]*)?\n\d+ word search puzzles, one to a page\. \d+ pages/.test(desc) || !/Solutions to every puzzle at the back/.test(desc)) throw new Error(`KDP description: ${desc}`);
+console.log(`KDP description: ${desc.split("\n").length} lines, ${desc.length} characters`);
 
 await browser.close();
 if (errors.length) {

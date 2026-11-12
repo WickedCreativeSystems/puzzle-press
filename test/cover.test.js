@@ -48,7 +48,7 @@ test("panels sit next to each other with no gap or overlap", () => {
   assert.ok(Math.abs(g.frontX + g.panelW + 0.125 * 72 - g.width) < 1e-9);
 });
 
-test("spine text is allowed only from 79 pages", () => {
+test("spine text is allowed only from 80 pages", () => {
   assert.equal(coverGeometry({ pageCount: SPINE_TEXT_MIN_PAGES - 1 }).spineTextAllowed, false);
   assert.equal(coverGeometry({ pageCount: SPINE_TEXT_MIN_PAGES }).spineTextAllowed, true);
 });
@@ -220,4 +220,15 @@ test("the cover's two puzzles are the book's first two, every type, graded too",
       assert.equal(J(cover.puzzles[1]), J(book.puzzles[1]), `${name} ${difficulty}: back puzzle`);
     }
   }
+});
+
+test("spine type reaches KDP's 7pt cover-text minimum only past the spine-text minimum", async () => {
+  const { spineMaxPt, pagesForSpinePt, KDP_COVER_TYPE_MIN_PT } = await import("../src/pdf/cover-geometry.js");
+  assert.equal(KDP_COVER_TYPE_MIN_PT, 7);
+  assert.equal(spineMaxPt(80, "cream"), 4.5);
+  assert.equal(spineMaxPt(100, "cream"), 8);
+  const cream = pagesForSpinePt(7, "cream"), white = pagesForSpinePt(7, "white");
+  assert.ok(spineMaxPt(cream, "cream") >= 7 && spineMaxPt(cream - 1, "cream") < 7);
+  assert.ok(white > cream && spineMaxPt(white, "white") >= 7 && spineMaxPt(white - 1, "white") < 7);
+  console.log("7pt from", cream, "pages cream,", white, "white");
 });

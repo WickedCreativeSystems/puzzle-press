@@ -1,0 +1,50 @@
+[
+  {
+    "handle": "reeseteacher.bsky.social",
+    "did": "did:plc:rdc2l3ztlg6bkrc2vyeunson",
+    "at": "2026-11-11T15:16:03.799Z",
+    "uri": "at://did:plc:4uh6hpma6xqptgdfeaq4wxe7/app.bsky.graph.follow/3n22aqahurr2z"
+  },
+  {
+    "handle": "sgillikin.bsky.social",
+    "did": "did:plc:6t2omkzavo2hqjsjd6q3cmop",
+    "at": "2026-11-11T15:16:04.705Z",
+    "uri": "at://did:plc:4uh6hpma6xqptgdfeaq4wxe7/app.bsky.graph.follow/3n22aqbbexe2a"
+  },
+  {
+    "handle": "mpldesignsbooks.bsky.social",
+    "did": "did:plc:h2cde5finb2nwx6fxq2lapdv",
+    "at": "2026-11-11T15:18:07.184Z",
+    "uri": "at://did:plc:4uh6hpma6xqptgdfeaq4wxe7/app.bsky.graph.follow/3n22atw34cu24"
+  },
+  {
+    "handle": "mikecook-author.bsky.social",
+    "did": "did:plc:ki5cusabaf7xdkfxf74gbu2x",
+    "at": "2026-11-11T18:07:36.933Z",
+    "uri": "at://did:plc:4uh6hpma6xqptgdfeaq4wxe7/app.bsky.graph.follow/3n22kcypc3q2a"
+  },
+  {
+    "handle": "silentsword1010.bsky.social",
+    "did": "did:plc:rokxese3p3cbpk4dhkqgmst4",
+    "at": "2026-11-11T18:07:37.726Z",
+    "uri": "at://did:plc:4uh6hpma6xqptgdfeaq4wxe7/app.bsky.graph.follow/3n22kczhihb2k"
+  },
+  {
+    "handle": "playprekplay.bsky.social",
+    "did": "did:plc:q3ivlst4q4hwre3bc6kms3i2",
+    "at": "2026-11-12T00:11:44.093Z",
+    "uri": "at://did:plc:4uh6hpma6xqptgdfeaq4wxe7/app.bsky.graph.follow/3n236o3s5k22e"
+  },
+  {
+    "handle": "sallymacsam.bsky.social",
+    "did": "did:plc:koelz6a2ljuegefd266fc7ka",
+    "at": "2026-11-12T00:11:44.952Z",
+    "uri": "at://did:plc:4uh6hpma6xqptgdfeaq4wxe7/app.bsky.graph.follow/3n236o4lslz24"
+  },
+  {
+    "handle": "mrbraingame.bsky.social",
+    "did": "did:plc:g3e5escnmxrnyt4nukroezzd",
+    "at": "2026-11-12T03:09:54.293Z",
+    "uri": "at://did:plc:4uh6hpma6xqptgdfeaq4wxe7/app.bsky.graph.follow/3n23imoqnxq2w"
+  }
+]

@@ -15,10 +15,15 @@
 // not prove a page is *in* the index, but zero crawl requests proves it is not,
 // and the shape of the crawl is the earliest signal either way.
 //
-// Usage: node scripts/crawlers.mjs [hoursBack]     (npm run crawlers)
+// Usage: node scripts/crawlers.mjs [hoursBack] [tracepress]     (npm run crawlers)
+//
+// 2026-10-01: the same question for Trace Press, the second app on the zone.
+// Add `tracepress` to read its host and its sitemap instead.
 import { readFileSync } from "node:fs";
 
 const hours = Number(process.argv[2] || 24);
+const TP = process.argv.includes("tracepress");
+const HOST = TP ? "tracepress" : "puzzle";
 const creds = readFileSync(new URL("../../.git-credentials", import.meta.url), "utf8");
 const CF = (creds.match(/^CLOUDFLARE_API_TOKEN=(.*)$/m) || [])[1]?.trim();
 const ZONE = "4169ea6b92a0920d72f9ebc5f7653e9d";
@@ -38,8 +43,8 @@ const r = await fetch("https://api.cloudflare.com/client/v4/graphql", {
   headers: { authorization: `Bearer ${CF}`, "content-type": "application/json" },
   body: JSON.stringify({
     query: `query { viewer { zones(filter: {zoneTag: "${ZONE}"}) {
-      httpRequestsAdaptiveGroups(limit: 2000, filter: {datetime_geq: "${since}", clientRequestHTTPHost_like: "%puzzle%"}, orderBy: [count_DESC]) {
-        count dimensions { userAgent clientRequestPath }
+      httpRequestsAdaptiveGroups(limit: 2000, filter: {datetime_geq: "${since}", clientRequestHTTPHost_like: "%${HOST}%"}, orderBy: [count_DESC]) {
+        count dimensions { userAgent clientRequestPath edgeResponseStatus }
       } } } }`,
   }),
 });
@@ -51,13 +56,14 @@ for (const row of d.data.viewer.zones[0].httpRequestsAdaptiveGroups) {
   const m = row.dimensions.userAgent.match(NAMED);
   if (!m) continue;
   const key = WANTED.concat(OTHERS).find((w) => w.toLowerCase() === m[1].toLowerCase());
-  if (!tally.has(key)) tally.set(key, { n: 0, paths: new Map() });
+  if (!tally.has(key)) tally.set(key, { n: 0, paths: new Map(), status: new Map() });
   const e = tally.get(key);
   e.n += row.count;
+  e.status.set(row.dimensions.edgeResponseStatus, (e.status.get(row.dimensions.edgeResponseStatus) ?? 0) + row.count);
   e.paths.set(row.dimensions.clientRequestPath, (e.paths.get(row.dimensions.clientRequestPath) ?? 0) + row.count);
 }
 
-console.log(`\nSearch engines on puzzlepress — last ${hours}h\n`);
+console.log(`\nSearch engines on ${TP ? "tracepress" : "puzzlepress"} — last ${hours}h\n`);
 const line = (name) => {
   const e = tally.get(name);
   if (!e) return console.log(`  ${"0".padStart(6)}  ${name.padEnd(20)}  never came`);
@@ -86,9 +92,13 @@ if (rest.length) {
 // have not been crawled" are the same zero on a dashboard and opposite
 // instructions about what to do next — the same confusion as a silent beacon,
 // one layer further out. Grouped, because 91 individual lines is not a finding.
-const sitemapPaths = [...readFileSync(new URL("../public/sitemap.xml", import.meta.url), "utf8")
+const sitemapPaths = [...readFileSync(new URL(TP ? "../../tracepress/public/sitemap.xml" : "../public/sitemap.xml", import.meta.url), "utf8")
   .matchAll(/<loc>(.*?)<\/loc>/g)].map((m) => new URL(m[1]).pathname);
-const GROUPS = [
+const GROUPS = TP ? [
+  ["the landing page", (p) => p === "/"],
+  ["the pages", (p) => p !== "/" && !p.startsWith("/samples/")],
+  ["the sample PDFs", (p) => p.startsWith("/samples/")],
+] : [
   ["the landing page", (p) => p === "/"],
   ["the 3 calculators", (p) => /-calculator$/.test(p)],
   ["the 2 articles", (p) => p === "/how-to-make-a-puzzle-book" || p === "/compare"],
@@ -108,9 +118,41 @@ for (const [label, test] of GROUPS) {
   });
   console.log(`  ${label.padEnd(22)}${cells.join("")}`);
 }
+// `--missing bingbot`: list the sitemap pages (not PDFs) that crawler never
+// fetched, ready to hand to `.search/search.mjs bing-submit`.
+const mi = process.argv.indexOf("--missing");
+if (mi > 0) {
+  const who = process.argv[mi + 1];
+  const got = tally.get(who)?.paths ?? new Set();
+  const miss = sitemapPaths.filter((p) => !p.startsWith("/samples/") && !got.has(p));
+  console.log(`\n  ${who} never fetched ${miss.length} of these pages:`);
+  for (const p of miss) console.log(`    ${p}`);
+}
 const unseen = sitemapPaths.filter((p) => !live.some((w) => tally.get(w).paths.has(p)));
 console.log(`\n  ${sitemapPaths.length - unseen.length} of ${sitemapPaths.length} published URLs have been fetched by at least one search engine in ${hours}h.`);
 if (unseen.length) console.log(`  ${unseen.length} have not been looked at by any of them. A page no engine has fetched cannot be failing at search yet.`);
+
+// Where the requests went, and what they got back. 2026-10-05: Googlebot made
+// 97 requests to Trace Press in a week and the sitemap table said 3 of 34
+// pages. 42 were robots.txt and 16 the sitemap; 96 got a 200. A crawler that
+// keeps reading the sitemap and gets 200s but fetches no pages is not blocked:
+// it has not decided the host is worth crawling yet. A wall of 403s or 5xx
+// would be the opposite instruction (look at Cloudflare, not the content), so
+// print both, for every engine that came.
+const pageSet = new Set(sitemapPaths);
+console.log("\n  Where each engine's requests went, and the status codes it got:\n");
+for (const w of live) {
+  const e = tally.get(w);
+  let robots = 0, sitemap = 0, pages = 0, other = 0;
+  for (const [p, n] of e.paths) {
+    if (p === "/robots.txt") robots += n;
+    else if (p === "/sitemap.xml") sitemap += n;
+    else if (pageSet.has(p)) pages += n;
+    else other += n;
+  }
+  const codes = [...e.status].sort((a, b) => b[1] - a[1]).map(([c, n]) => `${c}×${n}`).join(" ");
+  console.log(`  ${w.padEnd(11)} robots.txt ${robots}, sitemap ${sitemap}, sitemap URLs ${pages}, scripts/other ${other}   ${codes}`);
+}
 
 // A crawl is not an index entry, and this script deliberately does not pretend
 // otherwise. Confirming a page is *in* Bing needs Bing Webmaster Tools, which

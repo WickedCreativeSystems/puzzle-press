@@ -250,15 +250,39 @@ const isMine = (ip) => nowIps.includes(ip) || myPrefixes.some((p) => ip.startsWi
 const visitors = [...by].sort((a, b) => b[1].n - a[1].n);
 const ranTheApp = visitors.filter(([, e]) => did(e.paths).ranApp);
 
-const strangers = ranTheApp.filter(([ip]) => !isMine(ip));
+// A robot that runs the page's JavaScript fires the same beacons a person
+// does. On 2026-10-02 Meta's AI crawler (meta-externalagent) was 44 of the 69
+// "not this machine" rows for the past 24h, 26 of them "touched a control",
+// listed between a real iPhone that went to Stripe and everyone else. An
+// address whose every user agent names itself a robot is counted on one line
+// and left out of the rows. Names only, never an owner: a cloud address is not
+// proof of a crawler (see the note at the end).
+const BOT_UA = /bot\b|bot\/|crawler|spider|externalagent|externalhit/i;
+// One owner exception: Meta's link-preview renderer runs the page from Meta's
+// own range, 2a03:2880::/32, as plain Chrome without naming itself, in the same
+// minute facebookexternalhit fetches it (Trace Press, 2026-10-19/20). A person
+// on Facebook browses from their own ISP, so this range is never a reader.
+const META = /^2a03:2880:/i;
+const declaresBot = (e, ip = "") => META.test(ip) || (e.uas.size > 0 && [...e.uas].every((u) => BOT_UA.test(u)));
+const robots = ranTheApp.filter(([ip, e]) => !isMine(ip) && declaresBot(e, ip));
+const strangers = ranTheApp.filter(([ip, e]) => !isMine(ip) && !declaresBot(e, ip));
 console.log(`\nWho ran the app — last ${hours}h   ${new Date().toLocaleString("en-US", { timeZone: "America/Chicago" })} CT`);
-console.log(`  ${visitors.length} addresses touched the site; ${ranTheApp.length} loaded main.js; ${strangers.length} of those were not this machine.\n`);
+console.log(`  ${visitors.length} addresses touched the site; ${ranTheApp.length} loaded main.js; ${strangers.length} of those were not this machine or a robot that named itself.\n`);
+if (robots.length) {
+  const names = new Map();
+  for (const [ip, e] of robots) {
+    const n = META.test(ip) ? "Meta link preview" : [...e.uas][0].match(/[\w.-]*(bot|crawler|spider|externalagent|externalhit)[\w.-]*/i)?.[0] ?? "robot";
+    names.set(n, (names.get(n) ?? 0) + 1);
+  }
+  console.log(`  Ran the JavaScript but named itself a robot (not listed below): ${robots.length} addresses — ${[...names].map(([n, c]) => `${n} ×${c}`).join(", ")}.\n`);
+}
 
 if (!strangers.length) {
   console.log("  Nobody but me ran the app in this window. Everything else was a crawler.\n");
 }
 
 for (const [ip, e] of ranTheApp) {
+  if (!isMine(ip) && declaresBot(e, ip)) continue;
   const d = did(e.paths);
   const mine = isMine(ip);
   const org = mine ? null : await orgOf(ip);
@@ -326,12 +350,39 @@ for (const [ip, e] of ranTheApp) {
 // finds them — including things that never run main.js and therefore never
 // appear above. Listing them separately is what stops a crawler's tour of the
 // samples directory from being read as six people considering the product.
-const sampleOnly = visitors.filter(([, e]) => did(e.paths).samples.length && !did(e.paths).ranApp);
+const sampleAll = visitors.filter(([, e]) => did(e.paths).samples.length && !did(e.paths).ranApp);
+// 2026-10-20: a robot that names itself (or Meta's range) is not a reader here
+// either. Facebook's preview fetcher took 30+ samples in two bursts on 10-19 and
+// filled this list; count those on one line instead.
+const sampleRobots = sampleAll.filter(([ip, e]) => declaresBot(e, ip));
+const sampleOnly = sampleAll.filter(([ip, e]) => !declaresBot(e, ip));
+// 2026-10-05: eleven of these, on phones, from consumer ISPs in eleven
+// countries, read like eleven people. Their minutes said otherwise: nine
+// addresses in nine countries each took one or two different samples between
+// 03:44 and 03:48Z, and two more took 5 and 3 files in one minute at 04:08.
+// That is one crawler spreading a file list over residential proxies. RDAP
+// cannot see it, because each address really is somebody's phone line. So
+// mark any address whose first sample fell in a 10-minute window with 3 or
+// more other sample-only addresses, and count them as one burst, not people.
+if (sampleRobots.length) console.log(`  Took a sample and named itself a robot (not listed): ${sampleRobots.length} addresses.\n`);
 if (sampleOnly.length) {
+  const first = new Map();
+  const times = (
+    await graphql(`query { viewer { zones(filter: {zoneTag: "${ZONE}"}) {
+      httpRequestsAdaptiveGroups(limit: 2000, filter: {datetime_geq: "${since}", clientRequestHTTPHost_like: "%puzzle%", clientRequestPath_like: "/samples/%"}, orderBy: [datetimeMinute_ASC]) {
+        count dimensions { clientIP datetimeMinute }
+      } } } }`)
+  ).viewer.zones[0].httpRequestsAdaptiveGroups;
+  for (const r of times) if (!first.has(r.dimensions.clientIP)) first.set(r.dimensions.clientIP, Date.parse(r.dimensions.datetimeMinute));
+  const t = (ip) => first.get(ip) ?? NaN;
+  const burst = new Set(sampleOnly.map(([ip]) => ip).filter((ip) =>
+    sampleOnly.filter(([o]) => Math.abs(t(o) - t(ip)) <= 10 * 60e3).length >= 4));
   console.log("  Opened a sample without ever running the app:");
-  for (const [ip, e] of sampleOnly) {
-    console.log(`    ${ip}   ${did(e.paths).samples.join(", ")}   ${[...e.uas][0]?.slice(0, 60) ?? "no agent"}`);
+  for (const [ip, e] of sampleOnly.sort(([a], [b]) => t(a) - t(b))) {
+    const hhmm = Number.isNaN(t(ip)) ? "?" : new Date(t(ip)).toISOString().slice(5, 16) + "Z";
+    console.log(`    ${hhmm}  ${ip}${burst.has(ip) ? "  [burst]" : ""}   ${did(e.paths).samples.join(", ")}   ${[...e.uas][0]?.slice(0, 60) ?? "no agent"}`);
   }
+  if (burst.size) console.log(`  ${burst.size} of ${sampleOnly.length} arrived in bursts (4+ addresses within 10 minutes): a crawler on rented addresses, not ${burst.size} people.`);
   console.log("");
 }
 
@@ -359,8 +410,12 @@ if (scanners.length) {
 // addresses. The same rotation caught traffic.mjs out on 09-14; every other
 // list in this file is built from `strangers`, which already excludes them.
 const wordListOnly = visitors.filter(
-  ([ip, e]) => !isMine(ip) && [...e.paths.keys()].some((p) => p.startsWith("/word-lists/")) && !did(e.paths).ranApp,
+  ([ip, e]) => !isMine(ip) && [...e.paths.keys()].some((p) => p.startsWith("/word-lists/")) && !did(e.paths).ranApp && !declaresBot(e, ip),
 );
+const wordListRobots = visitors.filter(
+  ([ip, e]) => !isMine(ip) && [...e.paths.keys()].some((p) => p.startsWith("/word-lists/")) && !did(e.paths).ranApp && declaresBot(e, ip),
+).length;
+if (wordListRobots) console.log(`  Read a word list and named itself a robot (not listed): ${wordListRobots} addresses.\n`);
 if (wordListOnly.length) {
   const total = wordListOnly.reduce((a, [, e]) => a + e.n, 0);
   console.log(`  Visited a word-list page without ever running the app: ${wordListOnly.length} addresses, ${total} requests.`);

@@ -3,16 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>KDP Spine Width Calculator — Free, in Inches, mm &amp; Pixels</title>
-<meta name="description" content="Free KDP spine width and full cover size in inches, mm and pixels at 300 DPI. White, cream, groundwood or colour paper — Amazon's formula, nothing added.">
+<title>KDP Spine Width Calculator &amp; Free Cover Template (300 DPI)</title>
+<meta name="description" content="KDP spine width and full cover size in inches, mm and pixels, plus a free 300 DPI cover template with bleed, spine and barcode box. Amazon's formula.">
 <link rel="canonical" href="https://puzzlepress.bananafest-destiny.com/spine-calculator">
 <meta property="og:type" content="website">
-<meta property="og:title" content="KDP Spine Width Calculator">
+<meta property="og:title" content="KDP Spine Width Calculator and Cover Template">
 <meta property="og:description" content="Spine width and full cover size for a KDP paperback, using Amazon's own formula. Several top-ranking calculators add 0.06 inch that Amazon's documentation does not.">
 <meta property="og:url" content="https://puzzlepress.bananafest-destiny.com/spine-calculator">
 <meta property="og:image" content="https://puzzlepress.bananafest-destiny.com/social-card.png?v=2026-09-28">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231d3557'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-weight='700' font-size='18' fill='white' text-anchor='middle'%3EP%3C/text%3E%3C/svg%3E"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <style>
   :root { --ink:#1a1a1a; --muted:#5c6470; --line:#d9dde3; --bg:#f6f7f9; --card:#fff; --accent:#1d3557; --ok:#2a7f3f; --warn:#a15c00; --warn-bg:#fff6e5; }
   * { box-sizing: border-box; }
@@ -54,10 +55,14 @@
   footer { color:var(--muted); font-size:13px; text-align:center; padding:30px 24px; border-top:1px solid var(--line); background:var(--card); margin-top:30px; }
   footer a { color: var(--muted); }
   /* The handoff beside the answer — see the note in the markup. */
+  .tpl { margin-top:12px; font:inherit; font-size:15px; font-weight:600; padding:9px 14px; border-radius:8px; background:#fff; color:var(--accent); border:1px solid var(--accent); cursor:pointer; }
   .make-here { margin-top:18px; text-align:center; }
+  .wh { display:flex; align-items:center; gap:8px; } .wh input { min-width:0; }
+  .note-bad { font-size:13px; color:#a33; margin:6px 0 0; }
   .make-here p { margin:9px 0 0; font-size:13px; color:#5c6470; }
 </style>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b7be686eebf64639b0e60d43860bbd54"}'></script>
+<script type="module" src="/js/first-touch.js"></script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -66,13 +71,14 @@
   "url": "https://puzzlepress.bananafest-destiny.com/spine-calculator",
   "applicationCategory": "CalculatorApplication",
   "operatingSystem": "Any browser",
-  "description": "Works out the spine width and full cover size for an Amazon KDP paperback, using Amazon's own page-count-times-paper-thickness formula, with nothing added.",
+  "description": "Works out the spine width and full cover size for an Amazon KDP paperback, using Amazon's own page-count-times-paper-thickness formula, with nothing added, and draws a 300 DPI cover template with the bleed, trim, spine folds, text-safe lines and barcode area.",
   "isAccessibleForFree": true,
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
   "isPartOf": { "@type": "SoftwareApplication", "name": "Puzzle Press", "url": "https://puzzlepress.bananafest-destiny.com/" },
   "publisher": { "@type": "Organization", "name": "Bananafest Destiny" }
 }
 </script>
+<script src="https://pulse.bananafest-destiny.com/p.js" data-site="puzzlepress.bananafest-destiny.com" defer></script>
 </head>
 <body>
 <header>
@@ -85,13 +91,18 @@
 
 <main>
   <h1>KDP spine width calculator</h1>
-  <p class="lede">Enter your page count, trim size and paper (white, cream, groundwood or colour). You get the spine width and the exact size your full cover PDF has to be — using Amazon's own formula, with nothing added to it.</p>
+  <p class="lede">Enter your page count, trim size and paper (white, cream, groundwood or colour). You get the spine width and the exact size your full cover PDF has to be — using Amazon's own formula, with nothing added to it. Custom trim sizes work too: 4" to 8.5" wide, 6" to 11.69" tall.</p>
 
   <div class="calc">
     <div class="fields">
       <div>
         <label for="trim">Trim size</label>
         <select id="trim"></select>
+      </div>
+      <div id="custom" hidden>
+        <label for="customW">Width × height (inches)</label>
+        <div class="wh"><input type="number" id="customW" value="7" min="4" max="8.5" step="0.01" aria-label="Width in inches"> × <input type="number" id="customH" value="10" min="6" max="11.69" step="0.01" aria-label="Height in inches"></div>
+        <p id="customNote" class="note-bad" hidden>KDP takes widths from 4" to 8.5" and heights from 6" to 11.69".</p>
       </div>
       <div>
         <label for="pages">Page count</label>
@@ -118,6 +129,8 @@
         <div class="k">Design canvas at 300 DPI</div>
         <div class="v" id="coverPx">—</div>
         <div class="s" id="pxNote">—</div>
+        <button type="button" class="tpl" id="tplBtn">Download this cover template (PNG)</button>
+        <div class="s" id="tplNote">Bleed, trim, spine folds, text-safe lines and the barcode box, drawn at this exact size. Put it under your art as the bottom layer, then hide it before you export.</div>
       </div>
     </div>
 
@@ -131,7 +144,7 @@
          calculator, none pressed the button. Same shape as the generator thumb
          bar and #previewDownload — a second button to the same place, so there
          is one destination and one funnel signal. -->
-    <div class="make-here">
+    <div class="make-here" id="makeBox">
       <a class="btn" id="makeBtnTop" href="/">Make this book free</a>
       <p>Opens the generator with this exact book already set up. Nothing to re-type.</p>
     </div>
@@ -184,6 +197,33 @@
   </section>
 
   <section class="prose">
+    <h2 id="custom-trim">Custom trim sizes</h2>
+    <p>KDP prints paperbacks at any custom size from 4" to 8.5" wide and 6" to 11.69" tall, not only the sizes in its menu (KDP help, "Print Options"). The cover formula doesn't change: twice the trim width, plus the spine, plus 0.25" of bleed across, by the trim height plus 0.25". Choose "Custom size" in the calculator above for any of them. These four are from KDP's own cover calculator at 200 pages of cream paper, a 0.5" spine (checked October 2026), and the calculator here gives the same figures:</p>
+    <div class="scroll"><table>
+      <tr><th>Trim</th><th>Full cover, 200 pages, cream</th><th>At 300 DPI</th></tr>
+      <tr><td>4" × 6"</td><td>8.75" × 6.25"</td><td>2625 × 1875 px</td></tr>
+      <tr><td>5.25" × 7.75"</td><td>11.25" × 8"</td><td>3375 × 2400 px</td></tr>
+      <tr><td>7" × 10"</td><td>14.75" × 10.25"</td><td>4425 × 3075 px</td></tr>
+      <tr><td>8.5" × 11.69"</td><td>17.75" × 11.94"</td><td>5325 × 3582 px</td></tr>
+    </table></div>
+    <p>The trim also sets the printing price. KDP counts a trim as large when it is more than 6.12" wide or more than 9" tall, and a large trim costs more to print per copy (KDP help, "Paperback Printing Cost"). For a custom size, the <a href="/royalty-calculator">royalty calculator</a> gives the right rate if you pick a menu trim in the same class: 6" × 9" or smaller for regular, 7" × 10" or larger for large.</p>
+  </section>
+
+  <section class="prose">
+    <h2 id="picture-book">Picture books: 24 and 32 pages in colour</h2>
+    <p>A short colour picture book can be a paperback. KDP's minimums are 24 pages for a paperback in black ink or premium colour, 72 in standard colour, and 75 for any hardcover (KDP help, "Print Options"). Premium colour paper is 0.002347" a page, so the spine is 0.056" at 24 pages and 0.075" at 32: too thin for spine text. KDP's cover calculator gives a spine safe area of 0 at both counts. These full cover sizes are from KDP's own cover calculator (checked October 2026), and the calculator above gives the same with Premium colour picked; use "Custom size" for the square trims:</p>
+    <div class="scroll"><table>
+      <tr><th>Trim</th><th>24 pages, premium colour</th><th>32 pages, premium colour</th></tr>
+      <tr><td>7.5" × 7.5"</td><td>15.306" × 7.75"<br>4592 × 2325 px</td><td>15.325" × 7.75"<br>4598 × 2325 px</td></tr>
+      <tr><td>8.25" × 8.25"</td><td>16.806" × 8.5"<br>5042 × 2550 px</td><td>16.825" × 8.5"<br>5048 × 2550 px</td></tr>
+      <tr><td>8.5" × 8.5"</td><td>17.306" × 8.75"<br>5192 × 2625 px</td><td>17.325" × 8.75"<br>5198 × 2625 px</td></tr>
+      <tr><td>8" × 10"</td><td>16.306" × 10.25"<br>4892 × 3075 px</td><td>16.325" × 10.25"<br>4898 × 3075 px</td></tr>
+      <tr><td>8.5" × 11"</td><td>17.306" × 11.25"<br>5192 × 3375 px</td><td>17.325" × 11.25"<br>5198 × 3375 px</td></tr>
+    </table></div>
+    <p>You don't need Cover Creator for the back. KDP takes your own cover as one PDF with the back, the spine and the front side by side, so the back can be a single picture. KDP adds a barcode to the back unless you supply one; the template above marks its box.</p>
+  </section>
+
+  <section class="prose">
     <h2>Inside margins change with thickness</h2>
     <p>The gutter — the inside margin, against the spine — has to grow as a book gets thicker, or the text disappears into the binding. KDP's table: 0.375" up to 150 pages, 0.5" to 300, 0.625" to 500, 0.75" to 700, and 0.875" beyond that. Outside, top and bottom need at least 0.25", or 0.375" if you use bleed.</p>
   </section>
@@ -193,27 +233,34 @@
     <p>Spine width settles whether the cover prints. What it earns is a different sum: printing cost depends on page count, ink and trim size, and comes off your royalty. There is a <a href="/royalty-calculator">royalty calculator</a> here too — worth a look before you settle on a page count, because every page costs about a penny to print.</p>
   </section>
 
+  <section class="prose" id="template">
+    <h2>A free KDP cover template</h2>
+    <p>The <strong>Download this cover template</strong> button above draws the whole cover as one PNG at 300 DPI, at the exact pixel size shown for your trim, page count and paper. On it: the 0.125" bleed in pink, the trim line, both spine folds, a dashed text-safe box 0.125" inside the trim (KDP asks for text at least that far in), the spine safe area once the book reaches 80 pages, and the 2" × 1.2" barcode box. Put it in Canva, Photoshop or Affinity as the bottom layer, design over it, then hide it before you export the PDF.</p>
+    <p>It is made in your browser and nothing is uploaded. Change the page count and download again. The spine and the full width change with it, so make a new template whenever the interior's page count changes.</p>
+  </section>
+
   <section class="prose">
     <h2>Two rules people miss</h2>
-    <p><strong>Spine text needs 79 pages — and then it needs room.</strong> Below 79 pages KDP wants the spine left blank. From 79 it is allowed, but the text must stay 0.0625" inside each fold: KDP's cover calculator gives the spine's safe area as the spine width less 0.125". An 80-page book on cream paper has a 0.200" spine and a 0.075" safe strip — under 5pt of type. Readable 6pt type needs about 0.22" of spine: 88 pages on cream, 97 on white. Type laid out on exactly 0.0625" puts the bottom of a "g" on the line, so Puzzle Press keeps its spine text a further 1/64" in and starts printing it at 100 pages on cream, 111 on white. The calculator above shows the safe strip for your book.</p>
+    <p><strong>Spine text needs 80 pages — and then it needs room.</strong> KDP's cover help page says "at least 79 pages" in one place and "more than 79 pages" in another, and Cover Creator's help says 80. In October 2026 a book KDP counted at 79 pages had its spine text refused, so plan on 80. Below that, leave the spine blank. From 80 it is allowed, but the text must stay 0.0625" inside each fold: KDP's cover calculator gives the spine's safe area as the spine width less 0.125". An 80-page book on cream paper has a 0.200" spine and a 0.075" safe strip — under 5pt of type. Readable 6pt type needs about 0.22" of spine: 88 pages on cream, 97 on white. Type laid out on exactly 0.0625" puts the bottom of a "g" on the line, so Puzzle Press keeps its spine text a further 1/64" in and starts printing it at 100 pages on cream, 111 on white. The calculator above shows the safe strip for your book.</p>
     <p><strong>Leave the barcode area clear.</strong> Keep a 2" × 1.2" clear space in the lower right of the back cover. Amazon prints a barcode there, and artwork underneath it will be covered.</p>
   </section>
 
   <div class="cta">
     <h2>Making a puzzle book?</h2>
-    <p>Puzzle Press generates the whole paperback — word search, sudoku, maze, criss-cross or crossword puzzles with solutions, laid out to these specifications — and then the matching cover, with the spine already worked out from the page count of the book it just made. Free to use — pay only to remove the footer line and the PREVIEW cover mark.</p>
+    <p>Puzzle Press generates the whole paperback — word search, sudoku, maze, criss-cross or crossword puzzles with solutions, laid out to these specifications — and then the matching cover, with the spine already worked out from the page count of the book it just made. Free to use — pay only to remove the PREVIEW cover mark.</p>
     <a class="btn" id="makeBtn" href="/">Make a book free</a>
     <p id="carry" style="font-size:13px;margin-top:-4px;color:#5c6470"></p>
     <p style="margin-top:-6px"><a href="/samples/sample-6x9.pdf" target="_blank" rel="noopener">See a finished book (PDF)</a> &middot; <a href="/samples/sample-cover-6x9.pdf" target="_blank" rel="noopener">and its cover</a> — made with it, nothing mocked up.</p>
-    <p style="font-size:13px">No sign-up. $19 once removes the footer line and the PREVIEW cover mark; 30-day refund, no questions.</p>
-    <p style="font-size:13px">Making a handwriting workbook instead? <a href="https://tracepress.bananafest-destiny.com/">Trace Press</a>, from the same maker, lays out an A–Z letter tracing book and its cover to the same KDP rules.</p>
+    <p style="font-size:13px">No sign-up. $19 once removes the PREVIEW cover mark; 30-day refund, no questions.</p>
+    <p style="font-size:13px">Making a handwriting workbook instead? <a href="https://tracepress.bananafest-destiny.com/">Trace Press</a>, from the same maker, lays out an A–Z letter tracing book and its cover to the same KDP rules. For a tracing book, the full cover width at every page count from 26 to 78 is worked out for all six trims on its <a href="https://tracepress.bananafest-destiny.com/tracing-book-cover-size">tracing book cover size</a> page.</p>
   </div>
 </main>
 
 <footer>
-  <p><strong>Puzzle Press</strong> — a <a href="https://bananafest-destiny.com">Bananafest Destiny</a> app. <a href="/#terms">Terms</a> · <a href="/royalty-calculator">Royalty calculator</a> · <a href="/margin-calculator">Margin calculator</a> · <a href="/how-to-make-a-puzzle-book">Guide</a> · <a href="/compare">Compared</a> · <a href="/word-search-book-generator">Word search</a> · <a href="/large-print-word-search-generator">Large print</a> · <a href="/sudoku-book-generator">Sudoku</a> · <a href="/maze-book-generator">Mazes</a> · <a href="/criss-cross-book-generator">Criss-cross</a> · <a href="/crossword-book-generator">Crosswords</a> · <a href="/word-lists/">Word lists</a> · <a href="mailto:support@bananafest-destiny.com">support@bananafest-destiny.com</a></p>
+  <p><strong>Puzzle Press</strong> — a <a href="https://bananafest-destiny.com">Bananafest Destiny</a> app. <a href="/#terms">Terms</a> · <a href="/privacy">Privacy</a> · <a href="/royalty-calculator">Royalty calculator</a> · <a href="/margin-calculator">Margin calculator</a> · <a href="/how-to-make-a-puzzle-book">Guide</a> · <a href="/compare">Compared</a> · <a href="/word-search-book-generator">Word search</a> · <a href="/large-print-word-search-generator">Large print</a> · <a href="/sudoku-book-generator">Sudoku</a> · <a href="/maze-book-generator">Mazes</a> · <a href="/criss-cross-book-generator">Criss-cross</a> · <a href="/crossword-book-generator">Crosswords</a> · <a href="/word-lists/">Word lists</a> · <a href="mailto:support@bananafest-destiny.com">support@bananafest-destiny.com</a></p>
   <p>Not affiliated with Amazon. KDP is a trademark of Amazon.com, Inc. Figures are from Amazon's published specifications; check your proof.</p>
   <p>Built in public by an autonomous agent — the full log is at <a href="https://bananafest-destiny.com/zoo/vibe-cider">bananafest-destiny.com/zoo/vibe-cider</a></p>
+  <p>Built by an AI bot. Want one for your own idea? <a href="https://vibecider.bananafest-destiny.com/?from=puzzlepress">$50 →</a></p>
 </footer>
 
 <script type="module" src="spine.js"></script>

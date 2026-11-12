@@ -19,8 +19,9 @@ import { TRIMS } from "../pdf/kdp.js";
 // pdf-lib and fontkit are about 90% of this bundle and are only needed once
 // somebody actually asks for a file, so they load on the first download
 // instead of before the page is usable.
-import { planPages, solutionsThatFit, solutionsPerPageFor, puzzlesForMinimum } from "../pdf/layout.js";
+import { planPages, solutionsThatFit, solutionsPerPageFor, puzzlesForMinimum, puzzlesForPages } from "../pdf/layout.js";
 import { gridBound } from "../generator/gridbound.js";
+import { source, payHref } from "./source.js";
 
 // Loaded separately rather than together. They share the heavy chunk, so the
 // second one costs almost nothing once the first has been fetched — and the
@@ -39,9 +40,11 @@ async function loadCover() {
   return coverMod;
 }
 import { px } from "./px.js";
+import { keywordsFor } from "./keywords.js";
+import { listingText } from "./listing.js";
 import { PALETTE_HEX, paletteIndex } from "../pdf/palettes.js";
 import { coverGeometry, spineWidthInches, SPINE_TEXT_MIN_PAGES, PAPER } from "../pdf/cover-geometry.js";
-import { royalty } from "../pdf/kdp-cost.js";
+import { royalty, printingCost } from "../pdf/kdp-cost.js";
 import { pageGeometry } from "../pdf/kdp.js";
 import { FREE_LIMIT, PRICE_LABEL, getLicense as storedLicense, setLicense, verifyEmail } from "./license.js";
 
@@ -64,13 +67,14 @@ const getLicense = () => storedLicense() ?? sessionLicense;
 // The pay link is injected by the Worker at request time (config.js) or is
 // absent in local dev. No link, no Buy button.
 const PAY_URL = window.PUZZLE_PRESS_PAY_URL || "";
+source();
 
 const $ = (id) => document.getElementById(id);
 const el = {
   title: $("title"), subtitle: $("subtitle"), author: $("author"), trim: $("trim"), count: $("count"), bleed: $("bleed"),
   themes: $("themes"), custom: $("custom"), customTitle: $("customTitle"),
   wpp: $("wpp"), difficulty: $("difficulty"), size: $("size"), seed: $("seed"), largePrint: $("largePrint"), kind: $("kind"), sudokuSize: $("sudokuSize"),
-  download: $("download"), downloadCover: $("downloadCover"), coverNote: $("coverNote"), moneyNote: $("moneyNote"), list: $("list"), ink: $("ink"), paper: $("paper"), coverColour: $("coverColour"), reshuffle: $("reshuffle"), status: $("status"), tier: $("tier"), warnings: $("warnings"),
+  download: $("download"), downloadCover: $("downloadCover"), coverNote: $("coverNote"), moneyNote: $("moneyNote"), keywordsBox: $("keywordsBox"), keywords: $("keywords"), listing: $("listing"), copyListing: $("copyListing"), list: $("list"), ink: $("ink"), paper: $("paper"), coverColour: $("coverColour"), reshuffle: $("reshuffle"), status: $("status"), tier: $("tier"), warnings: $("warnings"),
   meta: $("meta"), lengthWarn: $("lengthWarn"), page: $("page"), prev: $("prev"), next: $("next"), navLabel: $("navLabel"),
   dialog: $("unlockDialog"), dialogTitle: $("dialogTitle"), dialogLede: $("dialogLede"), buyLine: $("buyLine"), paidLead: $("paidLead"), email: $("email"), unlockErr: $("unlockErr"), verify: $("verify"), closeDialog: $("closeDialog"),
 };
@@ -147,6 +151,11 @@ let titleEdited = false;
 let subtitleEdited = false;
 el.title.addEventListener("input", () => { titleEdited = true; });
 el.subtitle.addEventListener("input", () => { subtitleEdited = true; });
+el.copyListing.addEventListener("click", (e) => {
+  navigator.clipboard?.writeText(el.listing.value).then(() => { el.copyListing.textContent = "Copied"; }, () => {});
+  if (e.isTrusted) px("description");
+});
+for (const f of [el.title, el.subtitle]) f.addEventListener("input", () => { if (book?.puzzles.length) showKeywords(settings()); });
 
 function refreshKind() {
   const kind = el.kind.value;
@@ -304,6 +313,29 @@ function answersPerPage(s, count) {
   return solutionsPerPageFor(count, solutionsThatFit(pageGeometry({ trim: s.trim, bleed: s.bleed }), s.largePrint, gridBound(s), count));
 }
 
+// The listing for KDP's Book Details page, from what is in this book: the
+// description (src/ui/listing.js) and the seven keyword boxes
+// (src/ui/keywords.js), each with its own Copy button.
+function showKeywords(s) {
+  const effective = effectiveCount(s.count);
+  const perPage = answersPerPage(s, effective);
+  const plan = planPages(effective, perPage);
+  el.listing.value = listingText(s, { puzzles: effective, pages: plan.total, perPage, notes: plan.notes, trimLabel: TRIMS[s.trim].label });
+  el.copyListing.textContent = "Copy the description";
+  el.keywords.replaceChildren(...keywordsFor(s).map((k) => {
+    const li = document.createElement("li");
+    const b = document.createElement("button");
+    b.type = "button"; b.textContent = "Copy";
+    b.addEventListener("click", (e) => {
+      navigator.clipboard?.writeText(k).then(() => { b.textContent = "Copied"; }, () => {});
+      if (e.isTrusted) px("keyword");
+    });
+    li.append(k, b);
+    return li;
+  }));
+  el.keywordsBox.hidden = false;
+}
+
 function showMeta(s) {
   // A book with no puzzles in it has no pages, no spine and no royalty. It
   // used to promise "50 puzzles · 66 pages" above "No puzzle could be made"
@@ -313,8 +345,10 @@ function showMeta(s) {
     el.lengthWarn.hidden = true;
     el.coverNote.textContent = "";
     el.moneyNote.textContent = "";
+    el.keywordsBox.hidden = true;
     return;
   }
+  showKeywords(s);
   const effective = effectiveCount(s.count);
   const plan = planPages(effective, answersPerPage(s, effective));
   const pages = plan.total;
@@ -355,6 +389,16 @@ function showMeta(s) {
   } else {
     el.moneyNote.textContent =
       `Prints for $${m.printing.toFixed(2)} on Amazon.com — at $${s.list.toFixed(2)} you keep $${m.royalty.toFixed(2)} a copy.`;
+    // KDP prints a short black-ink book for one price from 24 pages to 110
+    // (112 on groundwood), so a 30-page book pays for pages it doesn't have.
+    // The royalty calculator says so in pages; here it can say it in puzzles.
+    // Every book in the band is under 151 pages, so it has the same gutter and
+    // the same answers-per-page as this one, and the count is exact.
+    const { flatMax } = printingCost({ trim: s.trim, pages, ink: s.ink });
+    if (flatMax && pages < flatMax && !plan.belowMinimum) {
+      const most = puzzlesForPages(flatMax, answersPerPage(s, effective));
+      if (most > effective) el.moneyNote.textContent += ` Up to ${most} puzzles print for the same $${m.printing.toFixed(2)}.`;
+    }
   }
 }
 
@@ -571,7 +615,7 @@ function refreshTier(note = "") {
   if (lic) {
     el.tier.className = "tier licensed";
     el.tier.innerHTML =
-      `<b>Unlocked</b> for ${escapeHtml(lic.email)}. Unlimited puzzles, no watermark.` +
+      `<b>Unlocked</b> for ${escapeHtml(lic.email)}. Covers without PREVIEW.` +
       (note === "storage"
         ? ` <b>This tab only:</b> your browser is blocking site storage (a private window, or cookies turned off), so the unlock will not survive a reload. Enter the same email again after reloading, or use a normal window — your payment is recorded either way.`
         : "");
@@ -588,9 +632,9 @@ function refreshTier(note = "") {
     // first. The claim is literal: the PDF is built in this browser and saved
     // with createObjectURL (download(), ~line 711). Nothing is uploaded and
     // there is no account.
-    el.tier.innerHTML = `<b>Free:</b> full-length books, with one small line in the footer of every page and a cover marked PREVIEW. ` +
+    el.tier.innerHTML = `<b>Free:</b> the whole book, interior unmarked. Only the cover is marked PREVIEW. ` +
       `No sign-up, no email — the PDF is made here and saves straight to this device. ` +
-      `<a href="#" id="unlockLink">Remove both — ${PRICE_LABEL}</a> · ` +
+      `<a href="#" id="unlockLink">Unmarked cover — ${PRICE_LABEL}</a> · ` +
       `<a href="#" id="alreadyPaid">Already paid? Unlock</a>`;
     for (const id of ["unlockLink", "alreadyPaid"]) {
       el.tier.querySelector(`#${id}`).addEventListener("click", (e) => {
@@ -663,14 +707,14 @@ function openUnlock({ justPaid = false, intent = "buy", after = null, pages = 0,
       // landing page. It was still here, on the dialog where the money is,
       // promising to remove a stamp across the artwork that does not exist.
       // The lede underneath had said "no line in the footer" the whole time.
-      ? "Remove the footer line and PREVIEW"
+      ? "Take PREVIEW off your covers"
       : "Enter the email you paid with";
   el.dialogLede.textContent = justPaid
     ? "Enter the email you used at checkout and everything unlocks on this device."
     : afterCover
-      ? `Your title, your spine${pages ? `, sized for ${pages} pages` : ""}, with PREVIEW across the front. ${PRICE_LABEL} takes PREVIEW off the cover and the line off the interior's footer. Unlimited books, no account, no subscription.`
+      ? `Your title, your spine${pages ? `, sized for ${pages} pages` : ""}, with PREVIEW across the front. ${PRICE_LABEL} takes PREVIEW off it, and off every cover you make after. No account, no subscription.`
     : buying
-      ? `${PRICE_LABEL}. Unlimited books, no line in the footer, no PREVIEW across the cover. No account and no subscription.`
+      ? `${PRICE_LABEL}. Every cover you make, with no PREVIEW across it. The interior is already unmarked. No account and no subscription.`
       : "Enter the email you used at checkout and everything unlocks on this device.";
   // The cover saved itself somewhere the visitor has to go and find, and on a
   // phone that is usually out of sight, so the dialog asking for money sat over
@@ -693,8 +737,8 @@ function openUnlock({ justPaid = false, intent = "buy", after = null, pages = 0,
     // deliberate, so the book they just built is still there when they come
     // back. Only the weight changed.
     el.buyLine.innerHTML = buying
-      ? `<a class="buybtn" href="${escapeHtml(PAY_URL)}" target="_blank" rel="noopener">Buy now — ${PRICE_LABEL}</a><span class="fine">Opens Stripe checkout in a new tab. This page keeps your book.</span>`
-      : `<a href="${escapeHtml(PAY_URL)}" target="_blank" rel="noopener"><b>Buy now — ${PRICE_LABEL}</b></a> (opens Stripe checkout)`;
+      ? `<a class="buybtn" href="${escapeHtml(payHref(PAY_URL))}" target="_blank" rel="noopener">Buy now — ${PRICE_LABEL}</a><span class="fine">Opens Stripe checkout in a new tab. $19 is US dollars; outside the US, Stripe converts it to your currency, or you can pay in USD. This page keeps your book.</span>`
+      : `<a href="${escapeHtml(payHref(PAY_URL))}" target="_blank" rel="noopener"><b>Buy now — ${PRICE_LABEL}</b></a> (opens Stripe checkout)`;
     // The last act before Stripe, and the one that was hardest to live without:
     // a Stripe session that never completes is invisible to me from this side,
     // so "went to checkout and did not pay" read exactly like "never went".
@@ -844,7 +888,11 @@ async function download() {
     el.status.textContent =
       `Done — ${full.puzzles.length} puzzles, ${lastInterior.pages} pages, ${(blob.size / 1024).toFixed(0)} KB.` +
       (full.puzzles.length < count ? ` (${count - full.puzzles.length} could not be built — the cover will be sized for this book.)` : "") +
-      leftOutNote(leftOut);
+      leftOutNote(leftOut) +
+      // A finished interior used to end here, and the 10-04 visitor who made
+      // one left without pressing the button beside it. KDP asks for a cover
+      // file as well, and that button sizes one to these pages.
+      ` Next: “Download cover” makes the wrap cover for these ${lastInterior.pages} pages, spine included.`;
     // The bytes exist and the save was handed to the browser. Precisely: the
     // book rendered, the blob was built, and a.click() was dispatched without
     // throwing. It does NOT prove a file reached the disk — nothing in a page

@@ -19,7 +19,8 @@
 <meta name="twitter:title" content="Puzzle Book Generator for Amazon KDP — Word Search, Sudoku, Mazes">
 <meta name="twitter:description" content="Word search, sudoku, maze, fill-in and crossword books for Amazon KDP — puzzles, solutions and a matching cover, in your browser. Free to use.">
 <meta name="twitter:image" content="https://puzzlepress.bananafest-destiny.com/social-card.png?v=2026-09-28">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231d3557'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-weight='700' font-size='18' fill='white' text-anchor='middle'%3EP%3C/text%3E%3C/svg%3E"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <style>
   :root {
     --ink: #1a1a1a; --muted: #5c6470; --line: #d9dde3; --bg: #f6f7f9; --card: #fff;
@@ -123,6 +124,12 @@
   .warnings { margin: 12px 0 0; padding: 10px 12px; background: var(--warn-bg); color: var(--warn); border-radius: 8px; font-size: 13px; white-space: pre-line; }
   .warnings:empty { display: none; }
   .status { color: var(--muted); font-size: 13px; min-height: 20px; }
+  .keywords { margin-top: 12px; }
+  .keywords h3 { font-size: 14px; margin: 12px 0 4px; }
+  .keywords textarea { width: 100%; box-sizing: border-box; font: inherit; font-size: 13px; padding: 8px; border: 1px solid var(--line, #ccc); border-radius: 8px; margin-bottom: 6px; }
+  .keywords ol { margin: 6px 0 0; padding-left: 22px; font-size: 14px; }
+  .keywords li { margin: 3px 0; overflow-wrap: anywhere; }
+  .keywords li button { margin-left: 8px; padding: 4px 10px; font-size: 12px; }
   .preview { display: flex; flex-direction: column; gap: 12px; }
   .preview-stick { display: flex; flex-direction: column; gap: 12px; }
   /* On a wide screen the form is taller than the window; keep the page you are
@@ -322,6 +329,7 @@
 .cover-row figcaption{font-size:14px;color:var(--muted);margin-top:8px;line-height:1.5}
 </style>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b7be686eebf64639b0e60d43860bbd54"}'></script>
+<script src="https://pulse.bananafest-destiny.com/p.js" data-site="puzzlepress.bananafest-destiny.com" defer></script>
 </head>
 <body>
 <header>
@@ -384,9 +392,11 @@
            has always said it precisely, but that is twelve screens down and the
            decision is made here. Same failure as the dashboard calling a load
            timer engagement: literally true, practically misleading, except this
-           one is charged to the customer. -->
-      <span class="note price"><span class="hero-lg">Free: a full-length book, one small line in each page footer. $19 once removes it.</span><span class="hero-sm">Free — one small footer line. $19 removes it.</span></span>
-      <span class="note">More samples: <a href="samples/sample-cover-6x9.pdf" target="_blank" rel="noopener">its cover</a> · <a href="samples/sample-sudoku-6x9.pdf" target="_blank" rel="noopener">sudoku</a> · <a href="samples/sample-maze-6x9.pdf" target="_blank" rel="noopener">maze</a> · <a href="samples/sample-crisscross-6x9.pdf" target="_blank" rel="noopener">fill-in</a> · <a href="samples/sample-crossword-6x9.pdf" target="_blank" rel="noopener">crossword</a></span>
+           one is charged to the customer.
+           2026-10-20: the footer line is gone; free pages carry no mark at all,
+           and only the cover says PREVIEW. -->
+      <span class="note price"><span class="hero-lg">Free: the whole book, pages unmarked. $19 once removes PREVIEW from the cover.</span><span class="hero-sm">Free, pages unmarked. $19 for a clean cover.</span></span>
+      <span class="note">More samples: <a href="samples/sample-cover-6x9.pdf" target="_blank" rel="noopener">its cover</a> · <a href="samples/sample-sudoku-6x9.pdf" target="_blank" rel="noopener">sudoku</a> · <a href="samples/sample-maze-6x9.pdf" target="_blank" rel="noopener">maze</a> · <a href="samples/sample-crisscross-6x9.pdf" target="_blank" rel="noopener">fill-in</a> · <a href="samples/sample-crossword-6x9.pdf" target="_blank" rel="noopener">crossword</a> · Whole books to print or look through (KDP won't take a file that is free on the web, so make your own to publish): <a href="free/word-search-100-6x9.pdf" target="_blank" rel="noopener">100 word searches</a> · <a href="free/sudoku-100-6x9.pdf" target="_blank" rel="noopener">100 sudoku</a> · <a href="free/mazes-100-6x9.pdf" target="_blank" rel="noopener">100 mazes</a> · <a href="free/large-print-word-search-100-8.5x11.pdf" target="_blank" rel="noopener">100 large print</a> · <a href="free/criss-cross-50-6x9.pdf" target="_blank" rel="noopener">50 fill-in</a> · <a href="free/crosswords-50-6x9.pdf" target="_blank" rel="noopener">50 crosswords</a> · Christmas: <a href="free/christmas-word-search-100-6x9.pdf" target="_blank" rel="noopener">100 word searches</a> · <a href="free/large-print-christmas-word-search-100-8.5x11.pdf" target="_blank" rel="noopener">large print</a> · <a href="free/christmas-crosswords-50-6x9.pdf" target="_blank" rel="noopener">50 crosswords</a> · <a href="free/christmas-criss-cross-50-6x9.pdf" target="_blank" rel="noopener">50 fill-in</a> · <a href="free/large-print-sudoku-100-8.5x11.pdf" target="_blank" rel="noopener">large print sudoku</a> · <a href="free/kids-word-search-100-8.5x11.pdf" target="_blank" rel="noopener">kids word search</a> · <a href="free/large-print-bible-word-search-100-8.5x11.pdf" target="_blank" rel="noopener">large print Bible</a> · <a href="free/nurse-word-search-100-6x9.pdf" target="_blank" rel="noopener">nurse word search</a></span>
     </div>
     <ul class="trust">
         <li>Word search, sudoku, mazes, fill-ins &amp; crosswords</li>
@@ -522,6 +532,15 @@ cherry"></textarea>
     <div class="tier" id="tier"></div>
     <div class="warnings" id="lengthWarn" hidden></div>
     <div class="warnings" id="warnings"></div>
+    <div class="keywords" id="keywordsBox" hidden>
+      <h3>KDP description</h3>
+      <p class="status">For the Description box on KDP's Book Details page: what is in this book, from the book itself. Plain text, so it pastes as it is.</p>
+      <textarea id="listing" rows="8" readonly></textarea>
+      <button type="button" id="copyListing">Copy the description</button>
+      <h3>KDP keywords</h3>
+      <p class="status">KDP's Book Details page has seven keyword boxes. These name what is in this book, and leave out what the title already says.</p>
+      <ol id="keywords"></ol>
+    </div>
   </section>
 
   <section class="preview">
@@ -540,7 +559,7 @@ cherry"></textarea>
         <button type="button" id="previewDownload">Download this book</button>
         <!-- The phone bar has said what it costs since the day it was built.
              This one asked for a click in silence. -->
-        <span class="note">Free — one small footer line.</span>
+        <span class="note">Free, pages unmarked.</span>
       </div>
     </div>
     <div class="page" id="page"></div>
@@ -570,6 +589,7 @@ cherry"></textarea>
     <img src="demo.gif" width="900" height="620" alt="Building a word search book and its cover, then switching to sudoku, mazes, criss-cross fill-ins and crosswords, with pages from each finished PDF" loading="lazy"
          style="max-width:100%;height:auto;border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 28px rgba(20,30,50,.10)">
     <p class="sub" style="margin:14px auto 0"><a href="https://www.youtube.com/watch?v=ph6q2ih6cBs" target="_blank" rel="noopener">Watch it in real time on YouTube (60 seconds, no narration)</a> — the same book, nothing sped up.</p>
+    <p class="sub" style="margin:14px auto 0">For Christmas: <a href="/?kind=wordsearch&amp;largePrint=1&amp;theme=christmas#tool">a large-print Christmas word search book</a>, from the <a href="/word-lists/christmas">Christmas word list</a>. If you tick KDP's low-content box, its review takes 3 to 4 weeks, so submit by <strong>Friday 27 November</strong>, four weeks before 25 December, to be on sale by Christmas. Without the box, KDP says a book takes 3 business days to go live, so for 25 December submit by about <strong>Friday 18 December</strong>. For a children&rsquo;s Christmas book, the same maker has free <a href="https://tracepress.bananafest-destiny.com/christmas-tracing-worksheets">Christmas tracing worksheets</a>.</p>
   </div>
 </section>
 
@@ -658,28 +678,28 @@ cherry"></textarea>
 <section class="band alt" id="pricing">
   <div class="band-inner">
     <h2>Pricing</h2>
-    <p class="sub">Make the whole book before you pay anything — all two hundred puzzles if that is what you want, with solutions and a cover. The free version is marked, not shortened: one small line in the footer of each page and a PREVIEW across the cover. Paying removes the marks. Nothing else changes.</p>
+    <p class="sub">Make the whole book before you pay anything — all two hundred puzzles if that is what you want, with solutions and a cover. The free version is not shortened and its pages are not marked. The only mark is PREVIEW across the cover. Paying removes it. Nothing else changes.</p>
     <div class="price">
       <div class="col">
         <div class="amount">Free</div>
         <ul>
           <li>Full-length books — as many puzzles as you like</li>
-          <li>All five puzzle types, every trim size</li>
+          <li>All five puzzle types, all six trim sizes</li>
           <li>Solutions included</li>
-          <li>Small "made with Puzzle Press" footer</li>
+          <li>Interior pages unmarked</li>
           <li>A cover of your own book, marked PREVIEW</li>
         </ul>
       </div>
       <div class="col">
         <div class="amount">$19 <span style="font-size:15px;font-weight:400;color:var(--muted)">once</span></div>
         <ul>
-          <li>Everything in Free, with no footer line</li>
+          <li>Everything in Free</li>
           <li>Cover without the PREVIEW mark</li>
           <li>Unlimited books, forever — one payment</li>
           <li>Sell what you make — we claim no rights to it</li>
         </ul>
         <p style="margin:14px 0 0"><a class="btn btn-primary" id="buyNow" href="#tool">Buy — $19</a></p>
-        <p style="margin:10px 0 0;font-size:13px;color:var(--muted)">30-day refund, no questions asked. Email <a href="mailto:support@bananafest-destiny.com">support@bananafest-destiny.com</a>. Sales tax added at checkout where your state requires it, and the checkout page may show a different account name than "Puzzle Press" — that's Stripe, not a mistake.</p>
+        <p style="margin:10px 0 0;font-size:13px;color:var(--muted)">30-day refund, no questions asked. Email <a href="mailto:support@bananafest-destiny.com">support@bananafest-destiny.com</a>. The price is in US dollars. Outside the US, Stripe shows it in your currency with its 2–4% conversion fee added, or you can choose to pay in US dollars. Sales tax added at checkout where your state requires it, and the checkout page may show a different account name than "Puzzle Press" — that's Stripe, not a mistake.</p>
       </div>
     </div>
   </div>
@@ -701,13 +721,13 @@ cherry"></textarea>
     <details class="faq"><summary>Do I need bleed?</summary>
       <p>Only if artwork runs off the edge of the page. A plain puzzle book does not — leave bleed off. Turning it on makes the PDF page slightly larger, which KDP expects for full-bleed interiors and flags as an error otherwise.</p></details>
     <details class="faq"><summary>What if I pay and it is not what I expected?</summary>
-      <p>Email support@bananafest-destiny.com within 30 days from the address you paid with and you get a refund, no questions asked. Before that, though: the free version makes the whole book — every puzzle, the solutions and the cover — so you can check the output on your own words, at your own trim size, before paying anything. The $19 removes the footer line and the PREVIEW mark and changes nothing else.</p></details>
+      <p>Email support@bananafest-destiny.com within 30 days from the address you paid with and you get a refund, no questions asked. Before that, though: the free version makes the whole book — every puzzle, the solutions and the cover — so you can check the output on your own words, at your own trim size, before paying anything. The $19 removes the PREVIEW mark from the cover and changes nothing else.</p></details>
     <details class="faq"><summary>I paid already. How do I unlock on another computer?</summary>
       <p>Open the tool and choose <strong>Already paid? Unlock</strong> next to the price, then enter the same email you paid with. That is the whole licence — there is no account and no password, so it works on every machine you use, for as long as the payment exists. You never pay twice. If the email is refused, it is almost always a different address from the one on your Stripe receipt; email <a href="mailto:support@bananafest-destiny.com">support@bananafest-destiny.com</a> and we will unlock it by hand.</p></details>
     <details class="faq"><summary>Can I sell the books I make?</summary>
       <p>Yes. Books you generate are yours — publish them, sell them, give them away. We claim no rights to the output and take no royalty on it.</p></details>
     <details class="faq"><summary>Does it make the cover too?</summary>
-      <p>Yes — a full wrap with back cover, spine and front on one PDF, sized from the page count of the interior it just made. The front puts your title on a colour picked from it (or one of eight you choose) over a puzzle from the book; the back carries your blurb and a second puzzle from inside, unsolved. You can generate the cover of your own book for free and look at it; it comes marked PREVIEW until you pay. Spine width is page count times paper thickness, which is why the paper setting matters. KDP only allows text on the spine from 79 pages up, so shorter books get a blank one — and it stays blank until the spine is wide enough for type to sit inside KDP’s spine safe area, 0.0625" in from each fold, with 1/64" to spare: 100 pages on cream paper, 111 on white. The barcode area on the back is left clear.</p></details>
+      <p>Yes — a full wrap with back cover, spine and front on one PDF, sized from the page count of the interior it just made. The front puts your title on a colour picked from it (or one of eight you choose) over a puzzle from the book; the back carries your blurb and a second puzzle from inside, unsolved. You can generate the cover of your own book for free and look at it; it comes marked PREVIEW until you pay. Spine width is page count times paper thickness, which is why the paper setting matters. KDP only allows text on the spine from 80 pages up, so shorter books get a blank one — and it stays blank until the spine is wide enough for type to sit inside KDP’s spine safe area, 0.0625" in from each fold, with 1/64" to spare: 100 pages on cream paper, 111 on white. The barcode area on the back is left clear.</p></details>
     <details class="faq"><summary>How many puzzles should a book have?</summary>
       <p>At 6×9, anything from 13 to 88 puzzles costs the same to print: KDP needs at least 24 pages, and charges one flat price up to 110. That assumes six answer grids to a page. A word search grid 21 or 22 letters across gets four, which brings the top down to 82, and a wider one gets two (11 to 68), so the answers stay at KDP's 7pt minimum. The page count beside the preview is always your own book's. Every book ends with four ruled Notes pages — five when one more is needed to make the page count even — and they count towards it. Watch the royalty line as you add puzzles — every page costs about a penny to print, so a longer book is not automatically a better one.</p></details>
     <details class="faq"><summary>Does anything I type get uploaded?</summary>
@@ -727,12 +747,12 @@ cherry"></textarea>
       </div>
       <div>
         <h3>What $19 buys</h3>
-        <p>One payment, no subscription: every book you make, with no footer line and the cover without its PREVIEW mark. It is tied to the email you pay with. There is no account to lose and nothing expires. Stripe adds sales tax at checkout if your state requires it on this kind of purchase — the $19 itself never changes. Checkout itself is hosted by Stripe and may show the account name on file rather than "Puzzle Press" — it's still this product and this site; only the label on that one page is different.</p>
+        <p>One payment, no subscription: every cover you make, without its PREVIEW mark. It is tied to the email you pay with. There is no account to lose and nothing expires. Stripe adds sales tax at checkout if your state requires it on this kind of purchase — the $19 itself never changes. Checkout itself is hosted by Stripe and may show the account name on file rather than "Puzzle Press" — it's still this product and this site; only the label on that one page is different.</p>
         <p>On a new computer, or after clearing your browser? Open the tool and choose <b>Already paid? Unlock</b>, then enter the same email. It works on every device you use, for as long as the payment exists — you never pay twice.</p>
       </div>
       <div>
         <h3>What we store</h3>
-        <p>Nothing you type. Puzzles and PDFs are built in your browser and never uploaded. Unlocking sends your email once so it can be checked against Stripe's record of payment; the result is kept in your browser's local storage.</p>
+        <p>Nothing you type. Puzzles and PDFs are built in your browser and never uploaded. Unlocking sends your email once so it can be checked against Stripe's record of payment; the result is kept in your browser's local storage. Everything that does leave your browser is listed on the <a href="/privacy">privacy page</a>.</p>
       </div>
       <div>
         <h3>If something goes wrong</h3>
@@ -750,10 +770,11 @@ cherry"></textarea>
 </section>
 
 <footer>
-  <p><strong>Puzzle Press</strong> — a <a href="https://bananafest-destiny.com">Bananafest Destiny</a> app. <a href="#terms">Terms</a> · <a href="/how-to-make-a-puzzle-book">Guide</a> · <a href="/spine-calculator">Spine calculator</a> · <a href="/royalty-calculator">Royalty calculator</a> · <a href="/margin-calculator">Margin calculator</a> · <a href="/compare">Compared</a> · <a href="/word-search-book-generator">Word search</a> · <a href="/large-print-word-search-generator">Large print</a> · <a href="/sudoku-book-generator">Sudoku</a> · <a href="/maze-book-generator">Mazes</a> · <a href="/criss-cross-book-generator">Criss-cross</a> · <a href="/crossword-book-generator">Crosswords</a> · <a href="/word-lists/">Word lists</a> · <a href="mailto:support@bananafest-destiny.com">support@bananafest-destiny.com</a></p>
-  <p>Also by the same maker: <a href="https://tracepress.bananafest-destiny.com/">Trace Press</a>, A–Z letter tracing workbooks for KDP.</p>
+  <p><strong>Puzzle Press</strong> — a <a href="https://bananafest-destiny.com">Bananafest Destiny</a> app. <a href="#terms">Terms</a> · <a href="/privacy">Privacy</a> · <a href="/how-to-make-a-puzzle-book">Guide</a> · <a href="/spine-calculator">Spine calculator</a> · <a href="/royalty-calculator">Royalty calculator</a> · <a href="/margin-calculator">Margin calculator</a> · <a href="/compare">Compared</a> · <a href="/word-search-book-generator">Word search</a> · <a href="/large-print-word-search-generator">Large print</a> · <a href="/sudoku-book-generator">Sudoku</a> · <a href="/maze-book-generator">Mazes</a> · <a href="/criss-cross-book-generator">Criss-cross</a> · <a href="/crossword-book-generator">Crosswords</a> · <a href="/word-lists/">Word lists</a> · <a href="mailto:support@bananafest-destiny.com">support@bananafest-destiny.com</a></p>
+  <p>Also by the same maker: <a href="https://tracepress.bananafest-destiny.com/">Trace Press</a>, A–Z letter tracing workbooks for KDP, with a <a href="https://tracepress.bananafest-destiny.com/how-to-make-a-handwriting-workbook">guide to making a tracing book for KDP</a>, a <a href="https://tracepress.bananafest-destiny.com/sight-word-tracing-workbook">sight word tracing workbook</a>, and free <a href="https://tracepress.bananafest-destiny.com/tracing-worksheet-generator">tracing worksheet</a> and <a href="https://tracepress.bananafest-destiny.com/name-tracing">name tracing</a> generators. Free holiday tracing worksheets too, 20 words with a picture each: <a href="https://tracepress.bananafest-destiny.com/halloween-tracing-worksheets">Halloween</a>, <a href="https://tracepress.bananafest-destiny.com/thanksgiving-tracing-worksheets">Thanksgiving</a> and <a href="https://tracepress.bananafest-destiny.com/christmas-tracing-worksheets">Christmas</a>.</p>
   <p>Not affiliated with Amazon. KDP is a trademark of Amazon.com, Inc.</p>
   <p>Built in public by an autonomous agent — the full log is at <a href="https://bananafest-destiny.com/zoo/vibe-cider">bananafest-destiny.com/zoo/vibe-cider</a></p>
+  <p>Built by an AI bot. Want one for your own idea? <a href="https://vibecider.bananafest-destiny.com/?from=puzzlepress">$50 →</a></p>
 </footer>
 
 <script type="application/ld+json">
@@ -800,7 +821,7 @@ cherry"></textarea>
 
 <dialog id="unlockDialog">
   <h2 id="dialogTitle">Unlock full books</h2>
-  <p id="dialogLede">Pay once, make unlimited books with no footer line and no PREVIEW mark. After paying, enter the email you used at checkout.</p>
+  <p id="dialogLede">Pay once, and every cover you make comes without the PREVIEW mark. After paying, enter the email you used at checkout.</p>
   <p id="buyLine"></p>
   <p class="paidlead" id="paidLead" hidden></p>
   <label for="email">Email used at checkout</label>
@@ -822,7 +843,7 @@ cherry"></textarea>
   <!-- Pinned to the bottom of the viewport the whole way down, so this is the
        single most-read sentence on the site. See the hero note for why it no
        longer says "watermarked". -->
-  <span class="note">Free — one small footer line.</span>
+  <span class="note">Free, pages unmarked.</span>
 </div>
 
 <script src="config.js"></script>

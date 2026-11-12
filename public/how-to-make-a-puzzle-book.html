@@ -12,7 +12,8 @@
 <meta property="og:url" content="https://puzzlepress.bananafest-destiny.com/how-to-make-a-puzzle-book">
 <meta property="og:image" content="https://puzzlepress.bananafest-destiny.com/social-card.png?v=2026-09-28">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231d3557'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-weight='700' font-size='18' fill='white' text-anchor='middle'%3EP%3C/text%3E%3C/svg%3E"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <style>
   :root { --ink:#1a1a1a; --muted:#5c6470; --line:#d9dde3; --bg:#f6f7f9; --card:#fff; --accent:#1d3557; --ok:#2a7f3f; --warn:#a15c00; --warn-bg:#fff6e5; }
   * { box-sizing: border-box; }
@@ -80,6 +81,8 @@
   .make-here p { margin:9px 0 0; font-size:13px; color:#5c6470; }
 </style>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b7be686eebf64639b0e60d43860bbd54"}'></script>
+<script type="module" src="/js/first-touch.js"></script>
+<script src="https://pulse.bananafest-destiny.com/p.js" data-site="puzzlepress.bananafest-destiny.com" defer></script>
 </head>
 <body>
 <header>
@@ -227,7 +230,7 @@
     <p>A paperback cover is one PDF containing the back, the spine and the front side by side, with 0.125" bleed on every outside edge. Its size depends on your page count, because <strong>the spine width is page count × paper thickness</strong>: 0.0025" per page on cream paper, 0.002252" on white, and 0.00235" on KDP's newer groundwood paper (KDP's help pages don't give it, but their cover calculator uses it; <a href="/spine-calculator#formulas">the spine calculator</a> shows how it was checked). A 66-page book on cream has a 0.165" spine; a 124-page book, 0.31". Change the paper and the spine changes with it.</p>
     <p>So the cover cannot be designed until the interior is finished and its page count is known. Change the interior, and the cover has to change too.</p>
     <div class="trap">Several of the top-ranked spine calculators online tell you to add 0.06" to the spine. Amazon's own documentation does not — that figure is a hardcover rule. Adding it to a paperback makes the cover 0.06" wider than KDP expects, and KDP says a cover file "sized at dimensions other than those expected" is caught by its Print Previewer, which will "prevent approval". <a href="/spine-calculator">This calculator</a> uses Amazon's figure and shows the arithmetic.</div>
-    <p>Two more rules: KDP only allows text on the spine from <strong>79 pages</strong> up — below that the spine is too narrow, leave it blank — and a <strong>2" × 1.2" area in the lower right of the back cover</strong> must be left clear for the barcode Amazon prints there.</p>
+    <p>Two more rules: KDP only allows text on the spine from <strong>80 pages</strong> up — below that the spine is too narrow, leave it blank — and a <strong>2" × 1.2" area in the lower right of the back cover</strong> must be left clear for the barcode Amazon prints there.</p>
   </section>
 
   <section class="prose" id="price">
@@ -242,6 +245,7 @@
     <p>On kdp.amazon.com, create a paperback. Enter title, author and description; pick a category (puzzles sit under Humor &amp; Entertainment → Puzzles &amp; Games); upload the interior PDF, then the cover PDF. KDP's previewer will show you the book page by page and flag anything outside the margins. Order a printed proof before you publish — it costs the printing price plus postage, and it is the only way to see the real thing.</p>
     <p>On the paperback details page KDP asks whether the book is <strong>low-content</strong>. By KDP's definition in <a href="#what">step 1</a> a puzzle book usually is not, and ticking the box is not free. KDP's page on it says low-content books &ldquo;are not eligible for creating a series, regardless of the ISBN option you select&rdquo; — so no Volume 1, 2, 3 grouped on one Amazon page — and that without an ISBN &ldquo;the sample and the back cover thumbnail are currently not supported&rdquo;, which means no Look Inside for a buyer deciding whether the grids are big enough to read. A book of different puzzles on every page is the activity book KDP describes; publish it as one.</p>
     <p>Keywords and a clear title matter more than anything else you do after the file is right. "Large Print Word Search for Seniors: 100 Easy Puzzles" tells Amazon's search and the buyer exactly what this is.</p>
+    <p>Plan a series around KDP&rsquo;s weekly limit. Since September 21, 2026 an account can create up to 2 new titles per format per week (paperback, hardcover and Kindle each count separately), and since October 5 it can submit up to 2 new titles per format per week for publication. Updates to a title you already submitted don&rsquo;t count, and the week resets on Sunday at 12:00 AM UTC (<a href="https://www.kdpcommunity.com/s/article/KDP-Title-Creation-Limits-Update">KDP&rsquo;s announcement</a>). So a Halloween, a Thanksgiving and a Christmas word search book are three paperbacks, which takes two weeks to submit.</p>
   </section>
 
   <section class="prose" id="mistakes">
@@ -252,7 +256,7 @@
       <li>Fonts not embedded</li>
       <li>Gutter too narrow for the page count, or on the wrong side</li>
       <li>Cover the wrong width — for example a spine worked out with that extra 0.06"</li>
-      <li>Text on the spine of a book under 79 pages</li>
+      <li>Text on the spine of a book under 80 pages</li>
       <li>Artwork under the barcode area</li>
     </ul>
     <p>None of these is about the puzzles. All of them are about the file. That is the dull truth of KDP: the book is judged on its geometry before anyone looks at its contents.</p>
@@ -260,17 +264,18 @@
 
   <div class="cta">
     <h2>Or let the tool handle the geometry</h2>
-    <p>Puzzle Press makes the whole book — word search, sudoku, mazes, criss-cross fill-ins or themed crosswords, graded if you like, with solutions and the four notes pages — to every rule above, then the cover with the spine already worked out from the page count of the book it just made. It shows the printing cost and royalty as you go. It is free to use; free books carry one small line in the page footer and a cover marked PREVIEW, and $19 once removes both.</p>
+    <p>Puzzle Press makes the whole book — word search, sudoku, mazes, criss-cross fill-ins or themed crosswords, graded if you like, with solutions and the four notes pages — to every rule above, then the cover with the spine already worked out from the page count of the book it just made. It shows the printing cost and royalty as you go. It is free to use; free books have unmarked pages and a cover marked PREVIEW, and $19 once removes that.</p>
     <a class="btn" href="/">Make a book free</a>
     <p style="margin-top:-6px"><a href="/samples/sample-6x9.pdf" target="_blank" rel="noopener">See a finished book (PDF)</a> &middot; <a href="/samples/sample-cover-6x9.pdf" target="_blank" rel="noopener">and its cover</a> — made with it, nothing mocked up. Or <a href="https://www.youtube.com/watch?v=ph6q2ih6cBs" target="_blank" rel="noopener">watch a book being made</a>, 60 seconds, real time.</p>
-    <p style="font-size:13px">No sign-up. $19 once removes the footer line and the PREVIEW cover mark; 30-day refund, no questions.</p>
+    <p style="font-size:13px">No sign-up. $19 once removes the PREVIEW cover mark; 30-day refund, no questions.</p>
   </div>
 </main>
 
 <footer>
-  <p><strong>Puzzle Press</strong> — a <a href="https://bananafest-destiny.com">Bananafest Destiny</a> app. <a href="/#terms">Terms</a> &middot; <a href="/spine-calculator">Spine calculator</a> &middot; <a href="/royalty-calculator">Royalty calculator</a> &middot; <a href="/margin-calculator">Margin calculator</a> &middot; <a href="/compare">Compared</a> &middot; <a href="/word-search-book-generator">Word search</a> &middot; <a href="/large-print-word-search-generator">Large print</a> &middot; <a href="/sudoku-book-generator">Sudoku</a> &middot; <a href="/maze-book-generator">Mazes</a> &middot; <a href="/criss-cross-book-generator">Criss-cross</a> &middot; <a href="/crossword-book-generator">Crosswords</a> &middot; <a href="/word-lists/">Word lists</a> &middot; <a href="mailto:support@bananafest-destiny.com">support@bananafest-destiny.com</a></p>
+  <p><strong>Puzzle Press</strong> — a <a href="https://bananafest-destiny.com">Bananafest Destiny</a> app. <a href="/#terms">Terms</a> · <a href="/privacy">Privacy</a> &middot; <a href="/spine-calculator">Spine calculator</a> &middot; <a href="/royalty-calculator">Royalty calculator</a> &middot; <a href="/margin-calculator">Margin calculator</a> &middot; <a href="/compare">Compared</a> &middot; <a href="/word-search-book-generator">Word search</a> &middot; <a href="/large-print-word-search-generator">Large print</a> &middot; <a href="/sudoku-book-generator">Sudoku</a> &middot; <a href="/maze-book-generator">Mazes</a> &middot; <a href="/criss-cross-book-generator">Criss-cross</a> &middot; <a href="/crossword-book-generator">Crosswords</a> &middot; <a href="/word-lists/">Word lists</a> &middot; <a href="mailto:support@bananafest-destiny.com">support@bananafest-destiny.com</a></p>
   <p>Not affiliated with Amazon. KDP is a trademark of Amazon.com, Inc. Figures are from Amazon's published specifications as of 2026 and can change; check KDP before you print.</p>
   <p>Built in public by an autonomous agent — the full log is at <a href="https://bananafest-destiny.com/zoo/vibe-cider">bananafest-destiny.com/zoo/vibe-cider</a></p>
+  <p>Built by an AI bot. Want one for your own idea? <a href="https://vibecider.bananafest-destiny.com/?from=puzzlepress">$50 →</a></p>
 </footer>
 <!-- Shown once the reader is past the first screen and hidden again when the
      closing .cta block arrives, so there are never two identical buttons on
@@ -279,7 +284,7 @@
      like a press on any door in the article. -->
 <div class="read-bar" id="readBar" data-show="0" aria-hidden="true">
   <a class="btn" href="/#tool">Make a book free</a>
-  <small>Free, with a line in the footer. $19 removes it.</small>
+  <small>Free, pages unmarked. $19 for a clean cover.</small>
 </div>
 
 <script>

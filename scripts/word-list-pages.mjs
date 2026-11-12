@@ -57,7 +57,6 @@ const related = (id) => {
   return [...new Set([...overlap, ...ring])].filter((x) => x !== id);
 };
 
-const favicon = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231d3557'/%3E%3Ctext x='16' y='22' font-family='sans-serif' font-weight='700' font-size='18' fill='white' text-anchor='middle'%3EP%3C/text%3E%3C/svg%3E`;
 const css = `
   :root { --ink:#1a1a1a; --muted:#5c6470; --line:#d9dde3; --bg:#f6f7f9; --card:#fff; --accent:#1d3557; }
   * { box-sizing: border-box; }
@@ -105,12 +104,15 @@ const shell = ({ title, description, path, ogImage, body, jsonld }) => `<!doctyp
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="${favicon}">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <style>${css}</style>
 <script type="application/ld+json">
 ${JSON.stringify(jsonld, null, 2)}
 </script>
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "b7be686eebf64639b0e60d43860bbd54"}'></script>
+<script type="module" src="/js/first-touch.js"></script>
+<script src="https://pulse.bananafest-destiny.com/p.js" data-site="puzzlepress.bananafest-destiny.com" defer></script>
 </head>
 <body>
 <header>
@@ -124,9 +126,10 @@ ${JSON.stringify(jsonld, null, 2)}
 ${body}
 </main>
 <footer>
-  <p><strong>Puzzle Press</strong> — a <a href="https://bananafest-destiny.com">Bananafest Destiny</a> app. <a href="/#terms">Terms</a> · <a href="/word-lists/">Word lists</a> · <a href="/word-search-book-generator">Word search</a> · <a href="/large-print-word-search-generator">Large print</a> · <a href="/sudoku-book-generator">Sudoku</a> · <a href="/maze-book-generator">Mazes</a> · <a href="/criss-cross-book-generator">Criss-cross</a> · <a href="/crossword-book-generator">Crosswords</a> · <a href="mailto:support@bananafest-destiny.com">support@bananafest-destiny.com</a></p>
+  <p><strong>Puzzle Press</strong> — a <a href="https://bananafest-destiny.com">Bananafest Destiny</a> app. <a href="/#terms">Terms</a> · <a href="/privacy">Privacy</a> · <a href="/word-lists/">Word lists</a> · <a href="/word-search-book-generator">Word search</a> · <a href="/large-print-word-search-generator">Large print</a> · <a href="/sudoku-book-generator">Sudoku</a> · <a href="/maze-book-generator">Mazes</a> · <a href="/criss-cross-book-generator">Criss-cross</a> · <a href="/crossword-book-generator">Crosswords</a> · <a href="mailto:support@bananafest-destiny.com">support@bananafest-destiny.com</a></p>
   <p>Word lists are free to use for any purpose, including in books you sell. Not affiliated with Amazon. KDP is a trademark of Amazon.com, Inc.</p>
   <p>Built in public by an autonomous agent — the full log is at <a href="https://bananafest-destiny.com/zoo/vibe-cider">bananafest-destiny.com/zoo/vibe-cider</a></p>
+  <p>Built by an AI bot. Want one for your own idea? <a href="https://vibecider.bananafest-destiny.com/?from=puzzlepress">$50 →</a></p>
 </footer>
 <script>
   // Two /px/ beacons (see src/ui/px.js for the full argument and the privacy
@@ -176,6 +179,15 @@ const svgPuzzle = (p) => {
 </svg>`;
 };
 
+// 2026-10-19: a seasonal list is only worth anything if the book is on sale
+// by the day, so those pages say how long KDP takes, in KDP's own words
+// (Timelines help, G202173620; Low-Content Books help, GGE5T76TWKA85DJM).
+const SEASON = { halloween: "31 October", thanksgiving: "26 November", christmas: "25 December", valentines: "14 February", easter: "28 March" };
+const SEASON_NOTE = { christmas: "To be on sale for Black Friday, 27 November, submit a puzzle book by about Thursday 19 November; a book that goes through low-content review may now miss Black Friday, so submit it by Friday 27 November, four weeks before 25 December, to be on sale by Christmas. Without review, submit by about Friday 18 December for 25 December. ", thanksgiving: "US Thanksgiving is Thursday 26 November in 2026. ", easter: "Easter Sunday is 28 March in 2027. " };
+const seasonNote = (id, t) => SEASON[id] ? `  <h2>On sale by ${SEASON[id]}</h2>
+  <p>${SEASON_NOTE[id] ?? ""}KDP's <a href="https://kdp.amazon.com/en_US/help/topic/G202173620" rel="noopener">Timelines</a> help page says "it takes 3 business days for your book (or update) to be live on Amazon", and that publishing "may take up to 6 days" for an account that has never published a book. It says low-content book reviews are taking longer than usual right now, three to four weeks. KDP's <a href="https://kdp.amazon.com/en_US/help/topic/GGE5T76TWKA85DJM" rel="noopener">low-content</a> page says that category "does not typically include activity books, such as puzzle books or coloring books". KDP also takes only 2 new paperbacks a week from each account for publication, counted when first submitted and reset every Sunday at 12:00 AM UTC (<a href="https://kdp.amazon.com/en_US/help/topic/G202172740" rel="noopener">Create a Book</a> help), so a seasonal book takes one of that week&rsquo;s two. Leave a few days' margin, and check the Timelines page on the day you publish.</p>
+` : "";
+
 const themePage = (id, t) => {
   const words = t.words.map((w) => w.toLowerCase()).sort();
   const n = words.length;
@@ -217,7 +229,7 @@ const themePage = (id, t) => {
     <a href="/?kind=crossword&amp;theme=${id}#tool">…or a crossword book</a>
     <a href="/word-lists/">All ${Object.keys(THEMES).length} lists</a>
   </div>
-  <p class="fine">Runs in your browser — nothing you type leaves your computer. No sign-up. $19 once removes the footer line and the PREVIEW cover mark; 30-day refund, no questions.</p>
+  <p class="fine">Runs in your browser — nothing you type leaves your computer. No sign-up. $19 once removes the PREVIEW cover mark; 30-day refund, no questions.</p>
   <p class="fine">The button opens the free generator with this theme selected. ${copy}</p>
 
   <h2>The list</h2>
@@ -239,9 +251,9 @@ const themePage = (id, t) => {
   </div>
   <p class="fine">Medium difficulty: across, down and diagonals, nothing backwards. Every word appears exactly once — the generator checks the finished grid rather than assuming. Solutions are in the book, not on this page.</p>
 
-  <div class="cta">
+${seasonNote(id, t)}  <div class="cta">
     <h2>Turn it into a book</h2>
-    <p>Puzzle Press makes the whole paperback for Amazon KDP — word search or <a href="/criss-cross-book-generator">criss-cross fill-in</a>, this theme or several mixed, graded easy to hard if you like, solutions at the back, margins and page count to KDP's rules — then the cover. Free to use; free books carry one small line in the page footer and a cover marked PREVIEW, and $19 once removes both.</p>
+    <p>Puzzle Press makes the whole paperback for Amazon KDP — word search or <a href="/criss-cross-book-generator">criss-cross fill-in</a>, this theme or several mixed, graded easy to hard if you like, solutions at the back, margins and page count to KDP's rules — then the cover. Free to use; free books have unmarked pages and a cover marked PREVIEW, and $19 once removes that.</p>
     <a class="btn" href="/?theme=${id}#tool">Make ${an(t.title)} ${esc(t.title)} word search book free</a>
   </div>
 
@@ -288,7 +300,7 @@ const index = shell({
     <h2>Any list into a book</h2>
     <p>Pick a theme, or several, or paste your own list — Puzzle Press lays out a complete word search paperback for Amazon KDP, solutions included, then the cover. Free to use.</p>
     <a class="btn" href="/?kind=wordsearch#tool">Make a word search book free</a>
-    <p class="fine">Runs in your browser — nothing you type leaves your computer. No sign-up. $19 once removes the footer line and the PREVIEW cover mark; 30-day refund, no questions.</p>
+    <p class="fine">Runs in your browser — nothing you type leaves your computer. No sign-up. $19 once removes the PREVIEW cover mark; 30-day refund, no questions.</p>
   </div>`,
 });
 writeFileSync(`${outDir}index.html`, index);

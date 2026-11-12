@@ -123,6 +123,15 @@ if (paid.length) {
     console.log(`    ${when}  $${((s.amount_total ?? 0) / 100).toFixed(2)}  ${(s.customer_details || {}).email ?? "?"}`);
   }
 }
+// Since 2026-10-24 the Buy link says where the buyer came from (src/ui/source.js).
+if (real.length) {
+  const by = {};
+  for (const s of real) {
+    const k = `${s.client_reference_id ?? "(untagged)"}${s.payment_status === "paid" ? " paid" : ""}`;
+    by[k] = (by[k] ?? 0) + 1;
+  }
+  console.log("\n  Checkouts by source:  " + Object.entries(by).map(([k, n]) => `${k} ×${n}`).join(", "));
+}
 if (real.length && !paid.length) {
   console.log("\n  Someone opened checkout and did not pay. Worth knowing why.");
 }
@@ -164,7 +173,7 @@ const nowIps = [...new Set((await Promise.all([traceIp("-4"), traceIp("-6")])).f
 // day or so, and Cloudflare recorded this morning's requests under an address
 // this machine no longer has. On 2026-09-14 the report read 172 real browsers
 // and 69 books made by strangers. Every one of those 69 was this machine,
-// under the retired address 2600:1702:6328:b810:f21e:a44c:8a9c:3539.
+// under an address it had held that morning and since retired.
 //
 // What does not rotate is the /64 network prefix. So: find every address that
 // appeared in the window, keep the ones sharing my prefix, and treat the whole
@@ -272,7 +281,9 @@ try {
 // them at their word — a self-identified bot is the cheapest honest exclusion
 // available on this plan, and the ones that lie (the Aceville fleet's fake
 // "iPhone OS 13_2_3") are caught by the scanner rule or by who.mjs instead.
-const BOT_UA = /bot|crawl|spider|slurp|Lightpanda|HeadlessChrome|python-requests|curl\//i;
+// externalagent/externalhit: Meta's crawlers, which run the JavaScript and
+// never say "bot" (2026-10-02: 44 addresses in a day, read as people).
+const BOT_UA = /bot|crawl|spider|slurp|externalagent|externalhit|Lightpanda|HeadlessChrome|python-requests|curl\//i;
 let appIps = [];
 let botAppIps = [];
 // Every address that is not a self-identified bot, whether or not it ever ran
@@ -421,6 +432,25 @@ const PAGE = /^\/($|[a-z0-9-]+$|word-lists\/)/;
 const ranScript = (paths) => [...paths].includes("/js/main.js") && [...paths].some((p) => PAGE.test(p));
 const RAN = (paths) => [...paths].some((p) => /^\/px\//.test(p)) || ranScript(paths);
 const peopleWhere = (pred) => (pathsByIp.size ? [...pathsByIp.values()].filter(pred).length : null);
+// The cloud an address belongs to, by its RDAP record, or null for anything
+// else, including a lookup that failed: an unknown owner stays a person.
+const CLOUD = /tencent|aceville|huawei|alibaba|aliyun|amazon|\baws\b|google|microsoft|azure|digitalocean|\bovh|hetzner|linode|akamai|oracle|vultr|choopa|contabo|scaleway|leaseweb|\bm247\b|datacamp|cdn77/i;
+// ACEVILLE is Tencent Cloud's registrant outside China.
+const CLOUD_ALIAS = { aceville: "Tencent", aliyun: "Alibaba", aws: "Amazon", azure: "Microsoft", choopa: "Vultr", ovh: "OVH", m247: "M247", cdn77: "CDN77", digitalocean: "DigitalOcean" };
+const cloudOf = async (ip) => {
+  try {
+    const r = await fetch(`https://rdap.arin.net/registry/ip/${ip}`, {
+      headers: { accept: "application/rdap+json" },
+      signal: AbortSignal.timeout(8000),
+    });
+    const m = r.ok ? (await r.text()).match(CLOUD) : null;
+    if (!m) return null;
+    const name = m[0].toLowerCase();
+    return CLOUD_ALIAS[name] ?? name[0].toUpperCase() + name.slice(1);
+  } catch {
+    return null;
+  }
+};
 
 try {
   const everyone = await pathCounts();
@@ -487,6 +517,7 @@ try {
   const browsed = people(/^\/px\/browsed\.gif$/);
   const pressed = people(/^\/px\/click\.gif$/);
   const pressedEmpty = people(/^\/px\/empty\.gif$/);
+  const fromRef = people(/^\/px\/ref\.gif$/);
   const made = people(/^\/px\/made\.gif$/);
   const failed = people(/^\/px\/failed\.gif$/);
   // The money side, added 2026-09-23. Every stage above this line describes
@@ -506,13 +537,18 @@ try {
   // buyer; the edge log showed both presses followed by a /api/verify that
   // answered 200, which is a licence handed out (no payment found is 404,
   // throttled 429, Stripe down 502). So the outcome is read from the status.
+  // This machine's calls are left out: on 10-05 the line read "9 refused",
+  // and all 9 were test/browser.mjs runs from here, not a stuck buyer.
   let verifyBy = new Map();
   try {
     const v = await graphql(`query { viewer { zones(filter: {zoneTag: "${ZONE}"}) {
-      httpRequestsAdaptiveGroups(limit: 20, filter: {datetime_geq: "${daySince}", clientRequestHTTPHost_like: "%puzzle%", clientRequestPath: "/api/verify"}) {
-        count dimensions { edgeResponseStatus }
+      httpRequestsAdaptiveGroups(limit: 200, filter: {datetime_geq: "${daySince}", clientRequestHTTPHost_like: "%puzzle%", clientRequestPath: "/api/verify"}) {
+        count dimensions { edgeResponseStatus clientIP }
       } } } }`);
-    for (const r of v.viewer.zones[0].httpRequestsAdaptiveGroups) verifyBy.set(r.dimensions.edgeResponseStatus, r.count);
+    for (const r of v.viewer.zones[0].httpRequestsAdaptiveGroups) {
+      if (myIps.includes(r.dimensions.clientIP)) continue;
+      verifyBy.set(r.dimensions.edgeResponseStatus, (verifyBy.get(r.dimensions.edgeResponseStatus) ?? 0) + r.count);
+    }
   } catch { verifyBy = null; }
   const pxTotal = hits(/^\/px\//);
   // The one number the current strategy stands or falls on. The calculators
@@ -585,7 +621,13 @@ try {
   // calculator HTML counted crawlers as users, and now the render module counts
   // clicks as books. Every time, the thing I keyed on sat one step upstream of
   // the act I was claiming.
-  const clickedDownload = people(/^\/js\/render-/);
+  //
+  // 2026-09-30 23:08Z, fourth: one address read all three sites in two minutes,
+  // every page and every chunk — render-* and cover-* included, no font, no
+  // beacon. A script-parser, not a click. A real click either fires a beacon or,
+  // behind an ad blocker, renders and so fetches the fonts.
+  const clicked = (re) => peopleWhere((paths) => [...paths].some((p) => re.test(p)) && [...paths].some((p) => /^\/px\/|^\/fonts\/.*\.ttf$/.test(p)));
+  const clickedDownload = clicked(/^\/js\/render-/);
   // .ttf only: /fonts/ also holds LICENSE.txt now, and a crawler fetching a
   // licence file is not a person making a book.
   //
@@ -593,7 +635,7 @@ try {
   // fonts. So fonts>0 proves a PDF was built, fonts==0 alongside a click proves
   // one was not, and the count itself is a floor rather than a tally of books.
   const fonts = people(/^\/fonts\/.*\.ttf$/);
-  const covers = people(/^\/js\/cover-/);
+  const covers = clicked(/^\/js\/cover-/);
   // Samples, counted only for addresses that ran the app — see the note above
   // the appIps query. The crawler total is kept and printed beside it, because
   // "0 people and 6 robots" is a different sentence from "0".
@@ -636,8 +678,12 @@ try {
   // stays one number.
   const calcEach = [
     ["spine", people(/^\/px\/spine\.gif$/)],
+    // The spine calculator's cover template download (src/ui/cover-template.js).
+    ["of them took the cover template", people(/^\/px\/template\.gif$/)],
     ["royalty", people(/^\/px\/royalty\.gif$/)],
     ["margin", people(/^\/px\/margin\.gif$/)],
+    // The margin calculator's page template download (src/ui/page-template.js).
+    ["of them took a page template", people(/^\/px\/pagetpl\.gif$/)],
   ].filter(([, n]) => n);
   // What the Pinterest pins (marketing/pins.md) actually drive traffic to —
   // previously invisible entirely, see the `served` note above.
@@ -686,6 +732,21 @@ try {
   const realPeople = peopleWhere(RAN);
   if (realPeople !== null) {
     console.log(`    REAL PEOPLE (ran any page)  ${realPeople}   <-- everything else on this report is a stage of these ${realPeople}, or a robot`);
+    const silent = peopleWhere((paths) => RAN(paths) && ![...paths].some((p) => /^\/px\//.test(p)));
+    if (silent) console.log(`      ${silent} of them sent no beacon: an ad blocker, or something that fetches scripts without running them`);
+    // 2026-10-27: this line read 7 and who.mjs read 0. Six were one cloud
+    // provider's addresses, each in its own /24 so the farm rule could not see
+    // them, running Chrome on a word list and firing /px/list like a reader; the
+    // seventh loaded the app from another cloud. ASN is gated on this plan, so
+    // ask RDAP about the handful of addresses on this line instead. Printed
+    // beside the number, not taken out of it: a developer on a VPS is a person,
+    // and who.mjs names each owner so the call is mine, row by row.
+    const realIps = [...pathsByIp].filter(([, paths]) => RAN(paths)).map(([ip]) => ip);
+    const inCloud = (await Promise.all(realIps.map(cloudOf))).filter(Boolean);
+    if (inCloud.length) {
+      const names = [...new Set(inCloud)].join(", ");
+      console.log(`      ${inCloud.length} of them are on a cloud network (${names}), not a home or phone connection: node scripts/who.mjs 23.5 names each one`);
+    }
   }
   console.log(`    Requests for the page       ${requested}`);
   const nobody = ranTheApp === null;
@@ -693,6 +754,7 @@ try {
   if (botAppIps.length) console.log(`      of which ${botAppIps.length} address${botAppIps.length > 1 ? "es" : ""} said "bot" in the user-agent — Googlebot runs JavaScript too`);
   console.log(`    ...and did not bounce       ${stayed}   <-- stayed long enough to idle-warm the PDF chunk`);
   if (pxTotal) {
+    console.log(`    ...came from a ?ref= link   ${fromRef}   <-- a link we handed out, on any page (since 10-25)`);
     console.log(`    ...scrolled to the tool     ${sawTool}   <-- the generator came on screen (immediate on desktop)`);
     console.log(`    ...touched a control        ${touched}   <-- operated the form at all`);
     console.log(`    ...browsed the preview      ${browsed}   <-- pressed Previous or Next`);
@@ -755,6 +817,12 @@ try {
   // "arrivals" counts the redirect; the people line counts the ones that were
   // not crawlers. A crawler following a link out of a video description is a
   // normal thing and is not an arrival.
+  //
+  // 2026-09-30: "YouTube, channel link 2" — both Amazon Dublin (AMAZON-DUB,
+  // RDAP), Chrome 134, each fetching /go/ytchan and / and nothing else: no
+  // main.js, no beacon. An honest user-agent was the only test here, and these
+  // didn't say what they were. So a person is also someone whose page ran,
+  // the same line every funnel stage above is drawn on.
   const GO_LABEL = {
     yt: "YouTube, generator", ytcalc: "YouTube, royalty calc", ytspine: "YouTube, spine calc", ytchan: "YouTube, channel link",
     ytmargin: "YouTube, margin calc", ytguide: "YouTube, the guide",
@@ -762,7 +830,7 @@ try {
   };
   const goRows = Object.keys(GO_LABEL).map((slug) => {
     const re = new RegExp(`^/go/${slug}$`);
-    return { slug, all: hits(re), real: people(re) };
+    return { slug, all: hits(re), real: peopleWhere((paths) => [...paths].some((p) => re.test(p)) && RAN(paths)) };
   });
   const goAll = goRows.reduce((n, r) => n + r.all, 0);
   console.log("\n  Where they came from:");
@@ -772,7 +840,7 @@ try {
     console.log("    (typed the domain, or an old link) are deliberately not attributed at all.");
   } else {
     for (const r of goRows.filter((r) => r.all)) {
-      console.log(`    ${GO_LABEL[r.slug].padEnd(26)} ${String(r.real).padStart(3)}${r.all > r.real ? `   (${r.all - r.real} more were crawlers following the link)` : ""}`);
+      console.log(`    ${GO_LABEL[r.slug].padEnd(26)} ${String(r.real).padStart(3)}${r.all > r.real ? `   (${r.all - r.real} more were crawlers, or never ran the page)` : ""}`);
     }
   }
 

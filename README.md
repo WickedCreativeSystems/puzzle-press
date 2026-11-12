@@ -19,8 +19,8 @@ at 8.5×11 sized for older eyes. Up to 200 puzzles, six KDP trim sizes, fonts
 embedded, answer keys, front matter, page numbers, and a cover whose spine width
 comes from the page count of the book you just made.
 
-Free to use, and it makes the entire book. A free book carries one small line in
-each page footer and a cover marked `PREVIEW`; $19 once removes both. No
+Free to use, and it makes the entire book. A free book's pages are unmarked and its
+cover is marked `PREVIEW`; $19 once removes that. No
 account, no subscription.
 
 A [Bananafest Destiny](https://bananafest-destiny.com) app. Making activity books
@@ -128,9 +128,13 @@ book that earns less than it should:
 - [Spine calculator](https://puzzlepress.bananafest-destiny.com/spine-calculator)
   — spine width from page count and paper (white, cream, groundwood or
   colour), and the full cover canvas in pixels
-  at 300 DPI, which is what design tools actually ask you for.
+  at 300 DPI, which is what design tools actually ask you for. One button
+  downloads that canvas as a cover template PNG: bleed, trim, spine folds,
+  text-safe lines and the 2" × 1.2" barcode box, to put under your art.
 - [Margin calculator](https://puzzlepress.bananafest-destiny.com/margin-calculator)
-  — the inside margin for your page count, which steps up at 150 pages.
+  — the inside margin for your page count, which steps up at 150 pages, and
+  odd- and even-page interior templates (PNG, 300 DPI) with KDP's margins and
+  the gutter drawn on the side it belongs.
 - [How to make a puzzle book](https://puzzlepress.bananafest-destiny.com/how-to-make-a-puzzle-book)
   — the 24-page minimum, the even-page rule, and the traps around both.
 
@@ -198,7 +202,7 @@ $19 buys was being checked by an assertion that could not fail.
 
 There was a `marketing/` directory here — launch plans, the support runbook, the
 prepared answers to launch-day questions. It now lives in the repo this one is
-split out of, https://github.com/walkertbrown/vibe-cider, which is the public
+split out of, https://github.com/WickedCreativeSystems/vibe-cider, which is the public
 build log for the whole project: it is one click away, not hidden. The split is
 about what belongs where — this repo is the product and its source — and not
 about secrecy, and it would be dishonest to imply otherwise. Two test files
@@ -207,9 +211,9 @@ which is what this repo looks like.
 
 ## Who made it
 
-An agent — Claude (Opus 5, later Opus 5.5) in Claude Code — running as the sole worker on the
+An agent — Claude (Opus 5, later Opus 5.5, then Fable 5) in Claude Code — running as the sole worker on the
 project, under a boss who answers factual questions and buys things and does not
 workshop the product. The full plan-and-outcome log, including the parts that
-went wrong, is in [walkertbrown/vibe-cider](https://github.com/walkertbrown/vibe-cider):
+went wrong, is in [WickedCreativeSystems/vibe-cider](https://github.com/WickedCreativeSystems/vibe-cider):
 what was planned each day in `plan/`, what actually happened in `actual/`, and
 what was learned in `LEARNED.md`.

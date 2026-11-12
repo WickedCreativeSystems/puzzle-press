@@ -1,0 +1,326 @@
+{
+  "keeper": "vibe-cider",
+  "note": "Every raw clip for the house channels. The json beside each mp4 holds its claim and backing. Clips with post_by are seasonal and listed first: they are stale after that date and leave this list the day after. The rest are evergreen.",
+  "clips": [
+    {
+      "product": "Trace Press",
+      "slug": "sight-word-matching-game-thanksgiving",
+      "shot": "2026-10-31",
+      "post_by": "2026-11-26",
+      "mp4": "https://tracepress.bananafest-destiny.com/media/sight-word-matching-game-thanksgiving.mp4",
+      "json": "https://tracepress.bananafest-destiny.com/media/sight-word-matching-game-thanksgiving.json"
+    },
+    {
+      "product": "Trace Press",
+      "slug": "thanksgiving-tracing-book",
+      "shot": "2026-10-19",
+      "post_by": "2026-11-26",
+      "mp4": "https://tracepress.bananafest-destiny.com/media/thanksgiving-tracing-book.mp4",
+      "json": "https://tracepress.bananafest-destiny.com/media/thanksgiving-tracing-book.json"
+    },
+    {
+      "product": "Puzzle Press",
+      "slug": "large-print-christmas-word-search",
+      "shot": "2026-10-20",
+      "post_by": "2026-12-25",
+      "mp4": "https://puzzlepress.bananafest-destiny.com/media/large-print-christmas-word-search.mp4",
+      "json": "https://puzzlepress.bananafest-destiny.com/media/large-print-christmas-word-search.json"
+    },
+    {
+      "product": "Trace Press",
+      "slug": "christmas-tracing-book",
+      "shot": "2026-10-18",
+      "post_by": "2026-12-25",
+      "mp4": "https://tracepress.bananafest-destiny.com/media/christmas-tracing-book.mp4",
+      "json": "https://tracepress.bananafest-destiny.com/media/christmas-tracing-book.json"
+    },
+    {
+      "product": "Trace Press",
+      "slug": "sight-word-matching-game-christmas",
+      "shot": "2026-11-01",
+      "post_by": "2026-12-25",
+      "mp4": "https://tracepress.bananafest-destiny.com/media/sight-word-matching-game-christmas.mp4",
+      "json": "https://tracepress.bananafest-destiny.com/media/sight-word-matching-game-christmas.json"
+    },
+    {
+      "product": "Puzzle Press",
+      "slug": "crisscross-1800-one-fill-each",
+      "shot": "2026-10-24",
+      "mp4": "https://puzzlepress.bananafest-destiny.com/media/crisscross-1800-one-fill-each.mp4",
+      "json": "https://puzzlepress.bananafest-destiny.com/media/crisscross-1800-one-fill-each.json"
+    },
+    {
+      "product": "Puzzle Press",
+      "slug": "crossword-7200-one-letter-in-seven",
+      "shot": "2026-10-24",
+      "mp4": "https://puzzlepress.bananafest-destiny.com/media/crossword-7200-one-letter-in-seven.mp4",
+      "json": "https://puzzlepress.bananafest-destiny.com/media/crossword-7200-one-letter-in-seven.json"
+    },
+    {
+      "product": "Puzzle Press",
+      "slug": "free-puzzle-book-pages-unmarked",
+      "shot": "2026-10-20",
+      "mp4": "https://puzzlepress.bananafest-destiny.com/media/free-puzzle-book-pages-unmarked.mp4",
+      "json": "https://puzzlepress.bananafest-destiny.com/media/free-puzzle-book-pages-unmarked.json"
+    },
+    {
+      "product": "Puzzle Press and Trace Press",
+      "slug": "how-vibe-cider-built-two-apps",
+      "shot": "2026-10-20",
+      "mp4": "https://puzzlepress.bananafest-destiny.com/media/how-vibe-cider-built-two-apps.mp4",
+      "json": "https://puzzlepress.bananafest-destiny.com/media/how-vibe-cider-built-two-apps.json"
+    },
+    {
+      "product": "Puzzle Press",
+      "slug": "kdp-barcode-box-back-cover",
+      "shot": "2026-11-09",
+      "mp4": "https://puzzlepress.bananafest-destiny.com/media/kdp-barcode-box-back-cover.mp4",
+      "json": "https://puzzlepress.bananafest-destiny.com/media/kdp-barcode-box-back-cover.json"
+    },
+    {
+      "product": "Puzzle Press",
+      "slug": "kdp-cover-template-300dpi",
+      "shot": "2026-10-17",
+      "mp4": "https://puzzlepress.bananafest-destiny.com/media/kdp-cover-template-300dpi.mp4",
+      "json": "https://puzzlepress.bananafest-destiny.com/media/kdp-cover-template-300dpi.json"
+    },
+    {
+      "product": "Puzzle Press",
+      "slug": "kdp-cover-template-8x11",
+      "shot": "2026-10-31",
+      "mp4": "https://puzzlepress.bananafest-destiny.com/media/kdp-cover-template-8x11.mp4",
+      "json": "https://puzzlepress.bananafest-destiny.com/media/kdp-cover-template-8x11.json"
+    },
+    {
+      "product": "Puzzle Press",
+      "slug": "kdp-gutter-grows-with-pages",
+      "shot": "2026-10-18",
+      "mp4": "https://puzzlepress.bananafest-destiny.com/media/kdp-gutter-grows-with-pages.mp4",
+      "json": "https://puzzlepress.bananafest-destiny.com/media/kdp-gutter-grows-with-pages.json"
+    },
+    {
+      "product": "Puzzle Press",
+      "slug": "kdp-interior-page-size-with-bleed",
+      "shot": "2026-11-11",
+      "mp4": "https://puzzlepress.bananafest-destiny.com/media/kdp-interior-page-size-with-bleed.mp4",
+      "json": "https://puzzlepress.bananafest-destiny.com/media/kdp-interior-page-size-with-bleed.json"
+    },
+    {
+      "product": "Puzzle Press",
+      "slug": "kdp-interior-page-template-odd-even",
+      "shot": "2026-11-11",
+      "mp4": "https://puzzlepress.bananafest-destiny.com/media/kdp-interior-page-template-odd-even.mp4",
+      "json": "https://puzzlepress.bananafest-destiny.com/media/kdp-interior-page-template-odd-even.json"
+    },
+    {
+      "product": "Puzzle Press",
+      "slug": "kdp-large-trim-costs-a-dollar",
+      "shot": "2026-11-12",
+      "mp4": "https://puzzlepress.bananafest-destiny.com/media/kdp-large-trim-costs-a-dollar.mp4",
+      "json": "https://puzzlepress.bananafest-destiny.com/media/kdp-large-trim-costs-a-dollar.json"
+    },
+    {
+      "product": "Puzzle Press",
+      "slug": "kdp-one-cent-price-9-98-vs-9-99",
+      "shot": "2026-11-12",
+      "mp4": "https://puzzlepress.bananafest-destiny.com/media/kdp-one-cent-price-9-98-vs-9-99.mp4",
+      "json": "https://puzzlepress.bananafest-destiny.com/media/kdp-one-cent-price-9-98-vs-9-99.json"
+    },
+    {
+      "product": "Puzzle Press",
+      "slug": "kdp-paperback-spine-no-extra",
+      "shot": "2026-10-18",
+      "mp4": "https://puzzlepress.bananafest-destiny.com/media/kdp-paperback-spine-no-extra.mp4",
+      "json": "https://puzzlepress.bananafest-destiny.com/media/kdp-paperback-spine-no-extra.json"
+    },
+    {
+      "product": "Puzzle Press",
+      "slug": "kdp-printing-flat-to-110-pages",
+      "shot": "2026-10-17",
+      "mp4": "https://puzzlepress.bananafest-destiny.com/media/kdp-printing-flat-to-110-pages.mp4",
+      "json": "https://puzzlepress.bananafest-destiny.com/media/kdp-printing-flat-to-110-pages.json"
+    },
+    {
+      "product": "Puzzle Press",
+      "slug": "kdp-royalty-at-each-price",
+      "shot": "2026-10-17",
+      "mp4": "https://puzzlepress.bananafest-destiny.com/media/kdp-royalty-at-each-price.mp4",
+      "json": "https://puzzlepress.bananafest-destiny.com/media/kdp-royalty-at-each-price.json"
+    },
+    {
+      "product": "Puzzle Press",
+      "slug": "kdp-spine-text-size-by-pages",
+      "shot": "2026-11-09",
+      "mp4": "https://puzzlepress.bananafest-destiny.com/media/kdp-spine-text-size-by-pages.mp4",
+      "json": "https://puzzlepress.bananafest-destiny.com/media/kdp-spine-text-size-by-pages.json"
+    },
+    {
+      "product": "Puzzle Press",
+      "slug": "kdp-spine-white-groundwood-cream",
+      "shot": "2026-11-02",
+      "mp4": "https://puzzlepress.bananafest-destiny.com/media/kdp-spine-white-groundwood-cream.mp4",
+      "json": "https://puzzlepress.bananafest-destiny.com/media/kdp-spine-white-groundwood-cream.json"
+    },
+    {
+      "product": "Puzzle Press",
+      "slug": "large-print-word-search-answers",
+      "shot": "2026-11-09",
+      "mp4": "https://puzzlepress.bananafest-destiny.com/media/large-print-word-search-answers.mp4",
+      "json": "https://puzzlepress.bananafest-destiny.com/media/large-print-word-search-answers.json"
+    },
+    {
+      "product": "Puzzle Press",
+      "slug": "maze-2000-measured-easy-to-expert",
+      "shot": "2026-10-24",
+      "mp4": "https://puzzlepress.bananafest-destiny.com/media/maze-2000-measured-easy-to-expert.mp4",
+      "json": "https://puzzlepress.bananafest-destiny.com/media/maze-2000-measured-easy-to-expert.json"
+    },
+    {
+      "product": "Puzzle Press",
+      "slug": "puzzle-press-book-in-the-browser",
+      "shot": "2026-10-20",
+      "mp4": "https://puzzlepress.bananafest-destiny.com/media/puzzle-press-book-in-the-browser.mp4",
+      "json": "https://puzzlepress.bananafest-destiny.com/media/puzzle-press-book-in-the-browser.json"
+    },
+    {
+      "product": "Puzzle Press",
+      "slug": "sudoku-2400-puzzles-one-solution",
+      "shot": "2026-10-23",
+      "mp4": "https://puzzlepress.bananafest-destiny.com/media/sudoku-2400-puzzles-one-solution.mp4",
+      "json": "https://puzzlepress.bananafest-destiny.com/media/sudoku-2400-puzzles-one-solution.json"
+    },
+    {
+      "product": "Puzzle Press",
+      "slug": "the-19-dollar-checkout",
+      "shot": "2026-10-20",
+      "mp4": "https://puzzlepress.bananafest-destiny.com/media/the-19-dollar-checkout.mp4",
+      "json": "https://puzzlepress.bananafest-destiny.com/media/the-19-dollar-checkout.json"
+    },
+    {
+      "product": "Puzzle Press",
+      "slug": "word-search-5400-rude-words-caught",
+      "shot": "2026-10-24",
+      "mp4": "https://puzzlepress.bananafest-destiny.com/media/word-search-5400-rude-words-caught.mp4",
+      "json": "https://puzzlepress.bananafest-destiny.com/media/word-search-5400-rude-words-caught.json"
+    },
+    {
+      "product": "Trace Press",
+      "slug": "count-and-trace-1-10",
+      "shot": "2026-10-26",
+      "mp4": "https://tracepress.bananafest-destiny.com/media/count-and-trace-1-10.mp4",
+      "json": "https://tracepress.bananafest-destiny.com/media/count-and-trace-1-10.json"
+    },
+    {
+      "product": "Trace Press",
+      "slug": "cursive-workbook-for-adults",
+      "shot": "2026-10-17",
+      "mp4": "https://tracepress.bananafest-destiny.com/media/cursive-workbook-for-adults.mp4",
+      "json": "https://tracepress.bananafest-destiny.com/media/cursive-workbook-for-adults.json"
+    },
+    {
+      "product": "Trace Press",
+      "slug": "cvc-word-worksheets",
+      "shot": "2026-10-26",
+      "mp4": "https://tracepress.bananafest-destiny.com/media/cvc-word-worksheets.mp4",
+      "json": "https://tracepress.bananafest-destiny.com/media/cvc-word-worksheets.json"
+    },
+    {
+      "product": "Trace Press",
+      "slug": "handwriting-paper-line-sizes",
+      "shot": "2026-11-02",
+      "mp4": "https://tracepress.bananafest-destiny.com/media/handwriting-paper-line-sizes.mp4",
+      "json": "https://tracepress.bananafest-destiny.com/media/handwriting-paper-line-sizes.json"
+    },
+    {
+      "product": "Trace Press",
+      "slug": "handwriting-workbook-in-the-browser",
+      "shot": "2026-10-17",
+      "mp4": "https://tracepress.bananafest-destiny.com/media/handwriting-workbook-in-the-browser.mp4",
+      "json": "https://tracepress.bananafest-destiny.com/media/handwriting-workbook-in-the-browser.json"
+    },
+    {
+      "product": "Trace Press",
+      "slug": "name-tracing-capitals-strokes",
+      "shot": "2026-10-23",
+      "mp4": "https://tracepress.bananafest-destiny.com/media/name-tracing-capitals-strokes.mp4",
+      "json": "https://tracepress.bananafest-destiny.com/media/name-tracing-capitals-strokes.json"
+    },
+    {
+      "product": "Trace Press",
+      "slug": "name-tracing-worksheet",
+      "shot": "2026-10-17",
+      "mp4": "https://tracepress.bananafest-destiny.com/media/name-tracing-worksheet.mp4",
+      "json": "https://tracepress.bananafest-destiny.com/media/name-tracing-worksheet.json"
+    },
+    {
+      "product": "Trace Press",
+      "slug": "number-tracing-0-9",
+      "shot": "2026-11-09",
+      "mp4": "https://tracepress.bananafest-destiny.com/media/number-tracing-0-9.mp4",
+      "json": "https://tracepress.bananafest-destiny.com/media/number-tracing-0-9.json"
+    },
+    {
+      "product": "Trace Press",
+      "slug": "short-vowel-matching-game",
+      "shot": "2026-10-28",
+      "mp4": "https://tracepress.bananafest-destiny.com/media/short-vowel-matching-game.mp4",
+      "json": "https://tracepress.bananafest-destiny.com/media/short-vowel-matching-game.json"
+    },
+    {
+      "product": "Trace Press",
+      "slug": "sight-word-flash-cards-3x5",
+      "shot": "2026-10-26",
+      "mp4": "https://tracepress.bananafest-destiny.com/media/sight-word-flash-cards-3x5.mp4",
+      "json": "https://tracepress.bananafest-destiny.com/media/sight-word-flash-cards-3x5.json"
+    },
+    {
+      "product": "Trace Press",
+      "slug": "sight-word-matching-game-on-screen",
+      "shot": "2026-10-29",
+      "mp4": "https://tracepress.bananafest-destiny.com/media/sight-word-matching-game-on-screen.mp4",
+      "json": "https://tracepress.bananafest-destiny.com/media/sight-word-matching-game-on-screen.json"
+    },
+    {
+      "product": "Trace Press",
+      "slug": "sight-word-matching-game-pictures",
+      "shot": "2026-10-30",
+      "mp4": "https://tracepress.bananafest-destiny.com/media/sight-word-matching-game-pictures.mp4",
+      "json": "https://tracepress.bananafest-destiny.com/media/sight-word-matching-game-pictures.json"
+    },
+    {
+      "product": "Trace Press",
+      "slug": "sight-word-matching-game-your-words",
+      "shot": "2026-10-29",
+      "mp4": "https://tracepress.bananafest-destiny.com/media/sight-word-matching-game-your-words.mp4",
+      "json": "https://tracepress.bananafest-destiny.com/media/sight-word-matching-game-your-words.json"
+    },
+    {
+      "product": "Trace Press",
+      "slug": "this-book-belongs-to-page",
+      "shot": "2026-11-09",
+      "mp4": "https://tracepress.bananafest-destiny.com/media/this-book-belongs-to-page.mp4",
+      "json": "https://tracepress.bananafest-destiny.com/media/this-book-belongs-to-page.json"
+    },
+    {
+      "product": "Trace Press",
+      "slug": "tracing-book-cover-size",
+      "shot": "2026-10-18",
+      "mp4": "https://tracepress.bananafest-destiny.com/media/tracing-book-cover-size.mp4",
+      "json": "https://tracepress.bananafest-destiny.com/media/tracing-book-cover-size.json"
+    },
+    {
+      "product": "Trace Press",
+      "slug": "tracing-lines-pre-writing",
+      "shot": "2026-11-09",
+      "mp4": "https://tracepress.bananafest-destiny.com/media/tracing-lines-pre-writing.mp4",
+      "json": "https://tracepress.bananafest-destiny.com/media/tracing-lines-pre-writing.json"
+    },
+    {
+      "product": "Trace Press",
+      "slug": "word-picture-matching-cards",
+      "shot": "2026-10-30",
+      "mp4": "https://tracepress.bananafest-destiny.com/media/word-picture-matching-cards.mp4",
+      "json": "https://tracepress.bananafest-destiny.com/media/word-picture-matching-cards.json"
+    }
+  ]
+}
